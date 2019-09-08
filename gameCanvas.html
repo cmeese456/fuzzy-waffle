@@ -38,6 +38,18 @@ var myGameArea = {
 
         //This runs the updateGameArea function at an interval of every 20 miliseconds (50x a second)
         this.interval = setInterval(updateGameArea, 20);
+
+        //Add an event listener to intercept user keystrokes
+        //First listener handles keydown
+        window.addEventListener('keydown', function (e) {
+          myGameArea.keys = (myGameArea.keys || []);
+          myGameArea.keys[e.keyCode] = (e.type == "keydown");
+        })
+
+        //Handles keyup
+        window.addEventListener('keyup', function (e) {
+          myGameArea.keys[e.keyCode] = (e.type == "keydown");
+        })
     },
 
     //Clears the entire canvas so we can redraw new positions
@@ -50,6 +62,8 @@ var myGameArea = {
 function component(width, height, color, x, y) {
     this.width = width;
     this.height = height;
+    this.speedX = 0; //Handles Movement
+    this.speedY = 0; //Handles Movement
     this.x = x;
     this.y = y;
     
@@ -58,12 +72,31 @@ function component(width, height, color, x, y) {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
+  },
+
+this.newPos = function() {
+    this.x += this.speedX;
+    this.y += this.speedY; 
+  } 
 }
 
 //Handles calling both the clear and update functions 
 function updateGameArea() {
+  //Clear the canvas so we can update it
   myGameArea.clear();
+
+  //Set the speed of the player
+  myGamePiece.speedX = 0;
+  myGamePiece.speedY = 0; 
+
+  //Set Values if the player is trying to move the piece
+  if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1; }//Left
+  if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }//Right
+  if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }//Up
+  if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }//Down
+
+  //Update the position
+  myGamePiece.newPos();
   myGamePiece.update();
 }
 
