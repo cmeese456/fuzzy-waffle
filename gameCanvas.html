@@ -73,6 +73,9 @@ var myGameArea = {
   },
     //Function to stop the game when a player dies
     stop : function() {
+      myBackground.image.src = "lose.png";
+      myBackground.newPos(); 
+      myBackground.update();
       clearInterval(this.interval);
   }
 }
@@ -163,9 +166,6 @@ function updateGameArea() {
   //Handles collision detection for any spawned objects
   for (i = 0; i < myObstacles.length; i += 1) {
     if (myGamePiece.crashWith(myObstacles[i])) {
-      myBackground.image.src = "lose.png";
-      myBackground.newPos(); 
-      myBackground.update();
       myGameArea.stop();
       return;
     } 
