@@ -17,8 +17,8 @@ canvas {
 var myGamePiece;
 
 
-//declare obstable variables
-var myObstable
+//declare an array of obstacles
+var myObstacles = [];
 
 
 //startGame function simply calls the method start on the object myGameArea
@@ -29,9 +29,6 @@ function startGame() {
 
     //Initializes the Game Piece
     myGamePiece = new component(30, 30, "red", 10, 120);
-
-    //Initialize Obstacle
-    myObstacle = new component(10, 200, "green", 300, 120);
 }
 
 //Start method dynamically creates a <canvas> element and inserts it
@@ -42,6 +39,7 @@ var myGameArea = {
         this.canvas.width = 480;
         this.canvas.height = 270;
         this.context = this.canvas.getContext("2d");
+        this.frameNo = 0;  //Count Frames
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 
         //This runs the updateGameArea function at an interval of every 20 miliseconds (50x a second)
@@ -112,43 +110,55 @@ function component(width, height, color, x, y) {
   }
 }
 
+//Determines if we are at a specified interval
+function everyinterval(n) {
+  if ((myGameArea.frameNo / n) % 1 == 0) {return true;} // Mod 1 returns anything after the decimal
+  return false;
+}
+
 //Handles calling both the clear and update functions 
 function updateGameArea() {
+  var x, y;
 
-  //End the game if a collision is detected
-  if (myGamePiece.crashWith(myObstacle)) {
-
-    //Clear the canvas
-    myGameArea.clear();
-
-    //Stop the game
-    myGameArea.stop();
-
-    //Update the text to tell the player they lost
-
-    //Unhide the play again button and enable the user to click it
+  //Handles collision detection for any spawned objects
+  for (i = 0; i < myObstacles.length; i += 1) {
+    if (myGamePiece.crashWith(myObstacles[i])) {
+      myGameArea.stop();
+      return;
+    } 
   }
 
-  //Otherwise update the game as normal
-  else {
-    //Clear the canvas so we can update it
-    myGameArea.clear();
+  //Clear the canvas so we can update it
+  myGameArea.clear();
+  myGameArea.frameNo += 1;
 
-    //Set the speed of the player
-    myGamePiece.speedX = 0;
-    myGamePiece.speedY = 0; 
+  //Set the speed of the player
+  myGamePiece.speedX = 0;
+  myGamePiece.speedY = 0; 
 
-    //Set Values if the player is trying to move the piece
-    if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1; }//Left
-    if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }//Right
-    if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }//Up
-    if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }//Down
-
-    //Update the positions
-    myGamePiece.newPos();
-    myGamePiece.update();
-    myObstacle.update();
+  //At every 150th frame we execute this and create a new obstacle
+  //50 frames a second = every 3 seconds spawns
+  if (myGameArea.frameNo == 1 || everyinterval(150)) {
+    x = myGameArea.canvas.width;
+    y = myGameArea.canvas.height - 200
+    myObstacles.push(new component(10, 200, "green", x, y));
   }
+
+  //Updates position of all obstacles in frame
+  for (i = 0; i < myObstacles.length; i += 1) {
+    myObstacles[i].x += -1;
+    myObstacles[i].update();
+  }
+
+  //Set Values if the player is trying to move the piece
+  if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1; }//Left
+  if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }//Right
+  if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }//Up
+  if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }//Down
+
+  //Update the positions
+  myGamePiece.newPos();
+  myGamePiece.update();
 }
 
 </script>
