@@ -16,6 +16,11 @@ canvas {
 //declare a variable for the game piece
 var myGamePiece;
 
+
+//declare obstable variables
+var myObstable
+
+
 //startGame function simply calls the method start on the object myGameArea
 function startGame() {
 
@@ -24,6 +29,9 @@ function startGame() {
 
     //Initializes the Game Piece
     myGamePiece = new component(30, 30, "red", 10, 120);
+
+    //Initialize Obstacle
+    myObstacle = new component(10, 200, "green", 300, 120);
 }
 
 //Start method dynamically creates a <canvas> element and inserts it
@@ -54,7 +62,11 @@ var myGameArea = {
 
     //Clears the entire canvas so we can redraw new positions
     clear : function() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  },
+    //Function to stop the game when a player dies
+    stop : function() {
+      clearInterval(this.interval);
   }
 }
 
@@ -74,30 +86,69 @@ function component(width, height, color, x, y) {
         ctx.fillRect(this.x, this.y, this.width, this.height);
   },
 
-this.newPos = function() {
-    this.x += this.speedX;
-    this.y += this.speedY; 
-  } 
+    this.newPos = function() {
+      this.x += this.speedX;
+      this.y += this.speedY; 
+  },
+  
+    //Function to handle collision detection between objects
+    this.crashWith = function(otherobj) {
+      var myleft = this.x;
+      var myright = this.x + (this.width);
+      var mytop = this.y;
+      var mybottom = this.y + (this.height);
+      var otherleft = otherobj.x;
+      var otherright = otherobj.x + (otherobj.width);
+      var othertop = otherobj.y;
+      var otherbottom = otherobj.y + (otherobj.height);
+      var crash = true;
+      if ((mybottom < othertop) ||
+        (mytop > otherbottom) ||
+        (myright < otherleft) ||
+        (myleft > otherright)) {
+          crash = false;
+      }
+    return crash;
+  }
 }
 
 //Handles calling both the clear and update functions 
 function updateGameArea() {
-  //Clear the canvas so we can update it
-  myGameArea.clear();
 
-  //Set the speed of the player
-  myGamePiece.speedX = 0;
-  myGamePiece.speedY = 0; 
+  //End the game if a collision is detected
+  if (myGamePiece.crashWith(myObstacle)) {
 
-  //Set Values if the player is trying to move the piece
-  if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1; }//Left
-  if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }//Right
-  if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }//Up
-  if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }//Down
+    //Clear the canvas
+    myGameArea.clear();
 
-  //Update the position
-  myGamePiece.newPos();
-  myGamePiece.update();
+    //Stop the game
+    myGameArea.stop();
+
+    //Update the text to tell the player they lost
+
+    //Unhide the play again button and enable the user to click it
+  }
+
+  //Otherwise update the game as normal
+  else {
+    //Clear the canvas so we can update it
+    myGameArea.clear();
+
+    //Set the speed of the player
+    myGamePiece.speedX = 0;
+    myGamePiece.speedY = 0; 
+
+    //Set Values if the player is trying to move the piece
+    if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1; }//Left
+    if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }//Right
+    if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }//Up
+    if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }//Down
+
+    //Update the positions
+    myGamePiece.newPos();
+    myGamePiece.update();
+    myObstacle.update();
+  }
 }
 
 </script>
