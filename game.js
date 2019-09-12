@@ -179,34 +179,33 @@ function character(width, height, color, x, y, health)
 
     //Colliding with (player and characters) or walls
     //Stops movement
+    this.collideArr = [0,0,0,0];
+
     if ((mybottom == othertop && myleft < otherright && myright > otherleft) || mybottom >= maxHeight)
     { 
       //this. bottom colliding
       this.collideArr[0] = 1;
       crash = true;
     }
-    else if ((mytop == otherbottom && myleft < otherright && myright > otherleft) || mytop <= 0)
+    if ((mytop == otherbottom && myleft < otherright && myright > otherleft) || mytop <= 0)
     {
       //this. top colliding
       this.collideArr[1] = 1;
       crash = true;
     }
-    else if ((myright == otherleft && mytop < otherbottom && mybottom > othertop) || myright >= maxWidth)
+    if ((myright == otherleft && mytop < otherbottom && mybottom > othertop) || myright >= maxWidth)
     {
       //this. right colliding
       this.collideArr[2] = 1;
       crash = true;
     }
-    else if ((myleft == otherright && mytop < otherbottom && mybottom > othertop) || myleft <= 0)
+    if ((myleft == otherright && mytop < otherbottom && mybottom > othertop) || myleft <= 0)
     {
       //this. left colliding
       this.collideArr[3] = 1;
       crash = true;
     }
-    else
-    {
-      this.collideArr = [0,0,0,0];
-    }
+
   return crash;
 }
 
@@ -310,6 +309,7 @@ function updateGameArea()
     else 
         player.speedY = 0;
   }
+
 
   //Update Score
   //score.text = "SCORE: " + gameArea.frameNo;
