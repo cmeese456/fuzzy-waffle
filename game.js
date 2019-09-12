@@ -16,7 +16,7 @@ $(function startGame()
 {
     //Initializes the Game Piece
     //width,height,color,x,y,health
-    player = new character(16, 22, "images/character_up.png", 10, 120, 100, 64, 64);
+    player = new character(16, 22, "images/character_up.png", 10, 120, 100, 64, 64, 0);
 
     score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
@@ -136,7 +136,7 @@ function gameObject(width, height, color, x, y, type) {
 
 //This function dynamically creates a character with the specified input as parameters
 //player and enemies
-function character(width, height, color, x, y, health, scaledW, scaledH) 
+function character(width, height, color, x, y, health, scaledW, scaledH, frame) 
 {
   this.health = health;
   this.width = width;
@@ -150,23 +150,45 @@ function character(width, height, color, x, y, health, scaledW, scaledH)
   this.image.src = color;
   this.scaledW = scaledW;
   this.scaledH = scaledH;
+  this.frame = frame;
   
   //Handles the drawing of the game piece
   this.update = function(){
-      //Get the context
+      //Get the context + frame #
       ctx = gameArea.context;
-      ctx.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, 64, 64);
+
+      //Stop animating if the player is not moving
+      if(this.speedX == 0 && this.speedY == 0)
+      {
+        this.frame = 0;
+      }
+
+      //Draw the needed object
+      ctx.drawImage(this.image, this.width*this.frame, 0, this.width, this.height, this.x, this.y, 64, 64);
+
+      if(everyinterval(15))
+      {
+        if(this.frame == 3)
+        {
+          this.frame = 0;
+        }
+
+        else
+        {
+          this.frame = this.frame + 1;
+        }
+      }
 
       /*
       ctx.fillStyle = color;
       ctx.fillRect(this.x, this.y, this.width, this.height);
       */
-},
+  },
 
   this.newPos = function() {
     this.x += this.speedX;
     this.y += this.speedY; 
-},
+  },
 
   //Function to handle collision detection between objects
   this.crashWith = function(otherobj) {
@@ -212,7 +234,7 @@ function character(width, height, color, x, y, health, scaledW, scaledH)
     }
 
   return crash;
-},
+  },
 
   this.checkBounds = function() {
     var myleft = this.x;
