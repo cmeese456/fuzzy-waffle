@@ -166,7 +166,7 @@ function character(width, height, color, x, y, health, scaledW, scaledH, frame)
       //Draw the needed object
       ctx.drawImage(this.image, this.width*this.frame, 0, this.width, this.height, this.x, this.y, 64, 64);
 
-      if(everyinterval(15))
+      if(everyinterval(10))
       {
         if(this.frame == 3)
         {
