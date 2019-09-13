@@ -28,7 +28,7 @@ $(function startGame() {
 
   score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
-  map = new gameObject(1280, 720, "background.png", 0, 0, "image");
+  map = new gameObject(window.innerWidth, window.innerHeight, "background.png", 0, 0, "image");
 
   //Initializes the Canvas
   gameArea.start();
@@ -39,8 +39,8 @@ $(function startGame() {
 var gameArea = {
   canvas: document.createElement("canvas"),
   start: function() {
-    this.canvas.width = 1280;
-    this.canvas.height = 720;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
     this.context = this.canvas.getContext("2d");
     this.frameNo = 0; //Count Frames
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
