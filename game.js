@@ -11,8 +11,21 @@ var score;
 //Background Variable
 var map;
 
+//function for displaying start screen
+$(function displayStart(){
+  //Add new canvas to screen
+  var myCanvas = document.createElement("canvas");
+  myCanvas.id = "startCanvas";
+  myCanvas.width = 1280;
+  myCanvas.height = 720;
+  var myImage = new Image();
+  myImage.src = "images/start-screen.jpg";
+  myCanvas.getContext("2d").drawImage(myImage,0,0,myCanvas.width,myCanvas.height);
+  document.body.appendChild(myCanvas);
+});
+
 //startGame function simply calls the method start on the object gameArea
-$(function startGame() 
+function startGame() 
 {
     //Initializes the Game Piece
     //width,height,color,x,y,health
@@ -24,7 +37,7 @@ $(function startGame()
 
     //Initializes the Canvas
     gameArea.start();
-});
+}
 
 //Start method dynamically creates a <canvas> element and inserts it
 //as the first node of the <body> element
