@@ -4,11 +4,16 @@ var player;
 //declare an array of enemies
 var enemies = [];
 
+//Declare an array of objects
+var mapObjects = [];
+
 //Score tracking
 var score;
 
 //Background Variable
 var map;
+var backgroundImage;
+var pattern;
 
 var myCanvas;
 var startImage;
@@ -51,9 +56,9 @@ function startGame() {
 
   score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
-  map = new gameObject(window.innerWidth, window.innerHeight, "background.png", 0, 0, "image");
+  map = new gameObject(window.innerWidth, window.innerHeight, pattern, 0, 0, "background");
 
-  //Initializes the Canvas
+  //Initializes the Canvas + setup the map
   gameArea.start();
 }
 
@@ -67,6 +72,15 @@ var gameArea = {
     this.context = this.canvas.getContext("2d");
     this.frameNo = 0; //Count Frames
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+
+    //Sets up the initial background tile pattern and fills it
+    backgroundImage = new Image();
+    backgroundImage.src = "images/background_tile.png";
+    pattern = this.context.createPattern(backgroundImage, "repeat");
+    this.context.fillStyle = pattern;
+    this.context.fillRect(this.x, this.y, this.width, this.height);
+
+    //Here is where static objects should be created and drawn
 
     //This runs the updateGameArea function at an interval of every 20 miliseconds (50x a second)
     this.interval = setInterval(updateGameArea, 20);
@@ -128,7 +142,18 @@ function gameObject(width, height, color, x, y, type) {
     //Handles redrawing images
     else if (type == "image") {
       ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    } else {
+    
+    }
+    
+    //Draws the background
+    else if (type == "background")
+    {
+      ctx.fillStyle = color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    
+    //Draws rectangular objects
+    else {
       ctx.fillStyle = color;
       ctx.fillRect(this.x, this.y, this.width, this.height);
     }
