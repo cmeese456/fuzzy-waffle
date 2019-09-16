@@ -6,6 +6,7 @@ var enemies = [];
 
 //Declare an array of objects
 var mapObjects = [];
+var wall;
 
 //Score tracking
 var score;
@@ -18,12 +19,15 @@ var pattern;
 var myCanvas;
 var startImage;
 
+var wWidth = Math.floor(window.innerWidth/8.0) * 8;
+var wHeight = Math.floor(window.innerHeight/8.0) * 8;
+
 $(function(){
   //create a canvas and append it to the HTML body
   myCanvas = document.createElement("canvas");
   myCanvas.id = "startCanvas";
-  myCanvas.width = window.innerWidth;
-  myCanvas.height  = window.innerHeight;
+  myCanvas.width = wWidth;
+  myCanvas.height  = wHeight;
   document.body.appendChild(myCanvas);
 
   //logic for switching between background images
@@ -46,8 +50,8 @@ function startGame() {
     16,
     22,
     "images/character_up.png",
-    10,
-    120,
+    0,
+    0,
     100,
     64,
     64,
@@ -56,7 +60,9 @@ function startGame() {
 
   score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
-  map = new gameObject(window.innerWidth, window.innerHeight, pattern, 0, 0, "background");
+  map = new gameObject(wWidth, wHeight, pattern, 0, 0, "background");
+
+  wall = new gameObject(112, 304, "brown", 104, 104, "wall");
 
   //Initializes the Canvas + setup the map
   gameArea.start();
@@ -67,8 +73,8 @@ function startGame() {
 var gameArea = {
   canvas: document.createElement("canvas"),
   start: function() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.canvas.width = wWidth;
+    this.canvas.height = wHeight;
     this.context = this.canvas.getContext("2d");
     this.frameNo = 0; //Count Frames
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -161,28 +167,7 @@ function gameObject(width, height, color, x, y, type) {
     (this.newPos = function() {
       this.x += this.speedX;
       this.y += this.speedY;
-    }),
-    //Function to handle collision detection between objects
-    (this.crashWith = function(otherobj) {
-      var myleft = this.x;
-      var myright = this.x + this.width;
-      var mytop = this.y;
-      var mybottom = this.y + this.height;
-      var otherleft = otherobj.x;
-      var otherright = otherobj.x + otherobj.width;
-      var othertop = otherobj.y;
-      var otherbottom = otherobj.y + otherobj.height;
-      var crash = true;
-      if (
-        mybottom < othertop ||
-        mytop > otherbottom ||
-        myright < otherleft ||
-        myleft > otherright
-      ) {
-        crash = false;
-      }
-      return crash;
-    });
+    })
 }
 
 //This function dynamically creates a character with the specified input as parameters
@@ -252,8 +237,9 @@ function character(
       this.x += this.speedX;
       this.y += this.speedY;
     }),
-    //Function to handle collision detection between objects
-    (this.crashWith = function(otherobj) {
+
+    //Function to handle collision detection between player and others objects
+    (this.checkCollision = function(otherobj) {
       var myleft = this.x;
       var myright = this.x + this.scaledW;
       var mytop = this.y;
@@ -291,45 +277,38 @@ function character(
         crash = true;
       }
 
-      return crash;
-    }),
-    (this.checkBounds = function() {
-      var myleft = this.x;
-      var myright = this.x + this.scaledW;
-      var mytop = this.y;
-      var mybottom = this.y + this.scaledH;
-      var maxHeight = gameArea.canvas.height;
-      var maxWidth = gameArea.canvas.width;
-      var crash = false;
-      this.collideArr = [0, 0, 0, 0];
-
-      //Handle bottom border
-      if (mybottom >= maxHeight) {
+      //Boundary checking
+      console.log(mybottom);
+      console.log(maxHeight);
+      if (mybottom == maxHeight) 
+      {
+        console.log("bot");
         this.collideArr[0] = 1;
         crash = true;
       }
-
       //Handle top border
-      if (mytop <= 0) {
+      if (mytop == 0) 
+      {
+        //console.log("top");
         this.collideArr[1] = 1;
         crash = true;
       }
-
       //Handle Right Border
-      if (myright >= maxWidth) {
+      if (myright == maxWidth) 
+      {
         this.collideArr[2] = 1;
         crash = true;
       }
-
       //Handle Left Border
-      if (myleft <= 0) {
+      if (myleft == 0) 
+      {
         this.collideArr[3] = 1;
         crash = true;
       }
 
       return crash;
-    });
-}
+    })
+  }
 
 //Determines if we are at a specified interval
 function everyinterval(n) {
@@ -352,18 +331,16 @@ function updateGameArea() {
   var x, y;
 
   //Handles collision detection for any spawned objects
-  checkCollision();
-
-  //Handles collision detection for borders
-  player.checkBounds();
+  player.checkCollision(wall);
 
   //Clear the canvas so we can update it
   gameArea.clear();
   //Increase frame
   gameArea.frameNo += 1;
 
-  map.newPos();
-  map.update();
+  wall.update();
+  //map.newPos();
+  //map.update();
 
   //Set the speed of the player
   player.speedX = 0;
@@ -396,25 +373,25 @@ function updateGameArea() {
   //Left
   if (gameArea.keys && gameArea.keys[37]) {
     player.image.src = "images/character_left.png";
-    if (player.collideArr[3] == 0) player.speedX = -5;
+    if (player.collideArr[3] == 0) player.speedX = -8;
     else player.speedX = 0;
   }
   //Right
   if (gameArea.keys && gameArea.keys[39]) {
     player.image.src = "images/character_right.png";
-    if (player.collideArr[2] == 0) player.speedX = 5;
+    if (player.collideArr[2] == 0) player.speedX = 8;
     else player.speedX = 0;
   }
   //Up
   if (gameArea.keys && gameArea.keys[38]) {
     player.image.src = "images/character_up.png";
-    if (player.collideArr[1] == 0) player.speedY = -5;
+    if (player.collideArr[1] == 0) player.speedY = -8;
     else player.speedY = 0;
   }
   //Down
   if (gameArea.keys && gameArea.keys[40]) {
     player.image.src = "images/character_down.png";
-    if (player.collideArr[0] == 0) player.speedY = 5;
+    if (player.collideArr[0] == 0) player.speedY = 8;
     else player.speedY = 0;
   }
 
@@ -425,19 +402,4 @@ function updateGameArea() {
   //Update the positions
   player.newPos();
   player.update();
-}
-
-function checkCollision() {
-  for (i = 0; i < enemies.length; i++) {
-    if (player.crashWith(enemies[i])) {
-      //deal damage
-      /*
-      map.image.src = "lose.png";
-      map.newPos(); 
-      map.update();
-      gameArea.stop();
-      return;
-      */
-    }
-  }
 }
