@@ -11,22 +11,38 @@ var score;
 //Background Variable
 var map;
 
-//function for displaying start screen
-$(function displayStart(){
-  //Add new canvas to screen
-  var myCanvas = document.createElement("canvas");
+var myCanvas;
+var startImage;
+
+$(function(){
+  //Set background color
+  document.body.style.backgroundColor = "black";
+  
+  //create a canvas and append it to the HTML body
+  myCanvas = document.createElement("canvas");
   myCanvas.id = "startCanvas";
   myCanvas.width = 1280;
-  myCanvas.height = 720;
-  var myImage = new Image();
-  myImage.src = "images/start-screen.jpg";
-  myCanvas.getContext("2d").drawImage(myImage,0,0,myCanvas.width,myCanvas.height);
+  myCanvas.height  = 720;
   document.body.appendChild(myCanvas);
+
+  //logic for switching between background images
+  startImage = new Image();
+  var count = 0;
+  startImage.src = "images/start-screen.png"
+  startImage.addEventListener('load',function(){
+    myCanvas.getContext("2d").drawImage(startImage,0,0,myCanvas.width,myCanvas.height)
+  });
+
+  //set its event listener
+  $('#startCanvas').on("click",startGame);
 });
 
 //startGame function simply calls the method start on the object gameArea
 function startGame() 
 {
+    //Remove initial canvas
+    $('#startCanvas').remove();
+
     //Initializes the Game Piece
     //width,height,color,x,y,health
     player = new character(16, 22, "images/character_up.png", 10, 120, 100, 64, 64, 0);
