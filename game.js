@@ -10,8 +10,31 @@ var score;
 //Background Variable
 var map;
 
-//startGame function simply calls the method start on the object gameArea
-$(function startGame() {
+var myCanvas;
+var startImage;
+
+$(function(){
+  //create a canvas and append it to the HTML body
+  myCanvas = document.createElement("canvas");
+  myCanvas.id = "startCanvas";
+  myCanvas.width = window.innerWidth;
+  myCanvas.height  = window.innerHeight;
+  document.body.appendChild(myCanvas);
+
+  //logic for switching between background images
+  startImage = new Image();
+  var count = 0;
+  startImage.src = "images/start-screen.png"
+  startImage.addEventListener('load',function(){
+    myCanvas.getContext("2d").drawImage(startImage,0,0,myCanvas.width,myCanvas.height)
+  });
+
+  //set its event listener
+  $('#startCanvas').on("click",startGame);
+});
+
+//startGame function simply calls the method start on the object gameAre
+function startGame() {
   //Initializes the Game Piece
   //width,height,color,x,y,health
   player = new character(
@@ -32,7 +55,7 @@ $(function startGame() {
 
   //Initializes the Canvas
   gameArea.start();
-});
+}
 
 //Start method dynamically creates a <canvas> element and inserts it
 //as the first node of the <body> element
