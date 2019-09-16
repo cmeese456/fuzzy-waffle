@@ -1,7 +1,8 @@
 //declare a variable for the game piece
 var player;
 
-//declare an array of enemies
+//declare an array of enemies\
+var enemy1;
 var enemies = [];
 
 //Declare an array of objects
@@ -57,6 +58,8 @@ function startGame() {
     64,
     0
   );
+
+  enemy1 = new enemy(16,22,"images/character_left.png",320,304,64,64,0);
 
   score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
@@ -256,6 +259,8 @@ function character(
       //Stops movement
       this.collideArr = [0, 0, 0, 0];
 
+      console.log(mytop);
+      console.log(otherbottom)
       if (mybottom == othertop && myleft < otherright && myright > otherleft) {
         //this. bottom colliding
         this.collideArr[0] = 1;
@@ -263,6 +268,7 @@ function character(
       }
       if (mytop == otherbottom && myleft < otherright && myright > otherleft) {
         //this. top colliding
+        console.log("top");
         this.collideArr[1] = 1;
         crash = true;
       }
@@ -273,16 +279,17 @@ function character(
       }
       if (myleft == otherright && mytop < otherbottom && mybottom > othertop) {
         //this. left colliding
+        console.log("left");
         this.collideArr[3] = 1;
         crash = true;
       }
 
       //Boundary checking
-      console.log(mybottom);
-      console.log(maxHeight);
+      //console.log(mybottom);
+      //console.log(maxHeight);
       if (mybottom == maxHeight) 
       {
-        console.log("bot");
+        //console.log("bot");
         this.collideArr[0] = 1;
         crash = true;
       }
@@ -310,6 +317,122 @@ function character(
     })
   }
 
+
+  function enemy(width,height,color,x,y,health,scaledW,scaledH,frame) {
+    this.health = health;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0; //Handles Movement
+    this.speedY = 0; //Handles Movement
+    this.x = x;
+    this.y = y;
+    this.collideArr = [0, 0, 0, 0];
+    this.image = new Image();
+    this.image.src = color;
+    this.scaledW = scaledW;
+    this.scaledH = scaledH;
+    this.frame = frame;
+  
+    //Handles the drawing of the game piece
+    (this.update = function() {
+      //Get the context + frame #
+      ctx = gameArea.context;
+  
+      //Stop animating if the player is not moving
+      if (this.speedX == 0 && this.speedY == 0) {
+        this.frame = 0;
+      }
+  
+      //Draw the needed object
+      ctx.drawImage(this.image,this.width * this.frame,0,this.width,this.height,this.x,this.y,64,64);
+  
+      if (everyinterval(10)) {
+        if (this.frame == 3) {
+          this.frame = 0;
+        } else {
+          this.frame = this.frame + 1;
+        }
+      }
+  
+      /*
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        */
+    }),
+      (this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+      }),
+  
+      //Function to handle collision detection between player and others objects
+      (this.checkCollision = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + this.scaledW;
+        var mytop = this.y;
+        var mybottom = this.y + this.scaledH;
+        var maxHeight = gameArea.canvas.height;
+        var maxWidth = gameArea.canvas.width;
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + otherobj.width;
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + otherobj.height;
+        var crash = false;
+  
+        //Colliding with the passed in object stops movement
+        //Stops movement
+  
+        if (mybottom == othertop && myleft < otherright && myright > otherleft) {
+          //this. bottom colliding
+          this.collideArr[0] = 1;
+          crash = true;
+        }
+        if (mytop == otherbottom && myleft < otherright && myright > otherleft) {
+          //this. top colliding
+          this.collideArr[1] = 1;
+          crash = true;
+        }
+        if (myright == otherleft && mytop < otherbottom && mybottom > othertop) {
+          //this. right colliding
+          this.collideArr[2] = 1;
+          crash = true;
+        }
+        if (myleft == otherright && mytop < otherbottom && mybottom > othertop) {
+          //this. left colliding
+          this.collideArr[3] = 1;
+          crash = true;
+        }
+  
+        //Boundary checking
+        if (mybottom == maxHeight) 
+        {
+          //console.log("bot");
+          this.collideArr[0] = 1;
+          crash = true;
+        }
+        //Handle top border
+        if (mytop == 0) 
+        {
+          //console.log("top");
+          this.collideArr[1] = 1;
+          crash = true;
+        }
+        //Handle Right Border
+        if (myright == maxWidth) 
+        {
+          this.collideArr[2] = 1;
+          crash = true;
+        }
+        //Handle Left Border
+        if (myleft == 0) 
+        {
+          this.collideArr[3] = 1;
+          crash = true;
+        }
+  
+        return crash;
+      })
+    }
+
 //Determines if we are at a specified interval
 function everyinterval(n) {
   // Mod 1 returns anything after the decimal
@@ -331,14 +454,15 @@ function updateGameArea() {
   var x, y;
 
   //Handles collision detection for any spawned objects
-  player.checkCollision(wall);
-
+  //player.checkCollision(wall);
+  player.checkCollision(enemy1);
   //Clear the canvas so we can update it
   gameArea.clear();
   //Increase frame
   gameArea.frameNo += 1;
 
   wall.update();
+  enemy1.update();
   //map.newPos();
   //map.update();
 
