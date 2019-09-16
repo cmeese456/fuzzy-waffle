@@ -14,14 +14,11 @@ var myCanvas;
 var startImage;
 
 $(function(){
-  //Set background color
-  document.body.style.backgroundColor = "black";
-  
   //create a canvas and append it to the HTML body
   myCanvas = document.createElement("canvas");
   myCanvas.id = "startCanvas";
-  myCanvas.width = 1280;
-  myCanvas.height  = 720;
+  myCanvas.width = window.innerWidth;
+  myCanvas.height  = window.innerHeight;
   document.body.appendChild(myCanvas);
 
   //logic for switching between background images
