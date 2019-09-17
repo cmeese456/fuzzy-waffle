@@ -59,7 +59,20 @@ function startGame() {
     0
   );
 
-  enemy1 = new enemy(16,22,"images/character_left.png",320,304,64,64,0);
+    var startX = 320;
+    var startY = 304;
+    for (var i = 0; i < 6; i++)
+    {
+        console.log(startX + "x");
+        console.log(startY + "y");
+        var newX = Math.ceil((startX + 50) / 8.0) * 8;
+        var newY = Math.ceil((startY + 50) / 8.0) * 8;
+        enemies[i] = new enemy(16, 22, "images/character_left.png", newX, newY, 200, 64, 64, 0);
+        startX = newX;
+        startY = newY;
+    }
+
+  //enemy1 = new enemy(16,22,"images/character_left.png",320,304,200,64,64,0);
 
   score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
@@ -122,7 +135,8 @@ var gameArea = {
 };
 
 //This function dynamically creates a gameObject with the specified input as parameters
-function gameObject(width, height, color, x, y, type) {
+function gameObject(width, height, color, x, y, type)
+{
   this.type = type;
   if (type == "image") {
     this.image = new Image();
@@ -135,6 +149,9 @@ function gameObject(width, height, color, x, y, type) {
   this.speedY = 0; //Handles Movement
   this.x = x;
   this.y = y;
+    this.color = color;
+    this.scaledW = width;
+    this.scaledH = height;
 
   //Handles the drawing of the game piece
   (this.update = function() {
@@ -242,7 +259,8 @@ function character(
     }),
 
     //Function to handle collision detection between player and others objects
-    (this.checkCollision = function(otherobj) {
+      (this.checkCollision = function (otherobj)
+      {
       var myleft = this.x;
       var myright = this.x + this.scaledW;
       var mytop = this.y;
@@ -250,25 +268,30 @@ function character(
       var maxHeight = gameArea.canvas.height;
       var maxWidth = gameArea.canvas.width;
       var otherleft = otherobj.x;
-      var otherright = otherobj.x + otherobj.width;
+      var otherright = otherobj.x + otherobj.scaledW;
       var othertop = otherobj.y;
-      var otherbottom = otherobj.y + otherobj.height;
+      var otherbottom = otherobj.y + otherobj.scaledH;
       var crash = false;
-
       //Colliding with the passed in object stops movement
       //Stops movement
-      this.collideArr = [0, 0, 0, 0];
-
-      console.log(mytop);
-      console.log(otherbottom)
-      if (mybottom == othertop && myleft < otherright && myright > otherleft) {
+      //console.log(otherobj.color);
+      //console.log(myright == otherleft);
+      //console.log(mytop < otherbottom);
+      //console.log(mytop);
+      //console.log(otherbottom);
+      //console.log(mybottom > othertop);
+      //console.log(otherobj.color);
+      //console.log(myright + "r");
+      //console.log(otherleft + "l");
+      if (mybottom == othertop && myleft < otherright && myright > otherleft)
+      {
         //this. bottom colliding
         this.collideArr[0] = 1;
         crash = true;
       }
       if (mytop == otherbottom && myleft < otherright && myright > otherleft) {
         //this. top colliding
-        console.log("top");
+       //console.log("top");
         this.collideArr[1] = 1;
         crash = true;
       }
@@ -279,10 +302,12 @@ function character(
       }
       if (myleft == otherright && mytop < otherbottom && mybottom > othertop) {
         //this. left colliding
-        console.log("left");
+        //console.log("left");
         this.collideArr[3] = 1;
         crash = true;
       }
+
+      //console.log(this.collideArr[0], this.collideArr[1], this.collideArr[2], this.collideArr[3]);
 
       //Boundary checking
       //console.log(mybottom);
@@ -380,7 +405,6 @@ function character(
   
         //Colliding with the passed in object stops movement
         //Stops movement
-  
         if (mybottom == othertop && myleft < otherright && myright > otherleft) {
           //this. bottom colliding
           this.collideArr[0] = 1;
@@ -454,15 +478,29 @@ function updateGameArea() {
   var x, y;
 
   //Handles collision detection for any spawned objects
-  //player.checkCollision(wall);
-  player.checkCollision(enemy1);
+    //console.log(player.checkCollision(enemy1) + " " + player.checkCollision(wall));
+    /*
+    if (!player.checkCollision(enemy1) && !player.checkCollision(wall))
+    {
+        player.collideArr = [0, 0, 0, 0];
+    }
+    */
+  
   //Clear the canvas so we can update it
   gameArea.clear();
   //Increase frame
   gameArea.frameNo += 1;
 
+  //enemy1.update();
+    for (var i = 0; i < 6; i++)
+    {
+        enemies[i].update();
+        if(!player.checkCollision(enemies[i]))
+        {
+            player.collideArr = [0, 0, 0, 0];
+        }
+    }
   wall.update();
-  enemy1.update();
   //map.newPos();
   //map.update();
 
@@ -486,12 +524,6 @@ function updateGameArea() {
       enemies.push(new gameObject(100, x - height - gap, "green", x, height + gap));
   }
   */
-
-  //Updates position of all obstacles in frame
-  for (i = 0; i < enemies.length; i += 1) {
-    //enemies[i].x += -3;
-    enemies[i].update();
-  }
 
   //Set Values if the player is trying to move the piece
   //Left
