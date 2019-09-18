@@ -212,7 +212,47 @@ function object(width, height, source, x, y, health, frame, type)
     //Function to handle collision detection between an object and other objects
     (this.checkCollision = function(otherobj)
     {
-        //Inset collision stuff here from Hunter
+        //Grab the necessary coordinate data from both objects
+        var x = this.x;
+        var y = this.y;
+        var r = this.x + this.width;
+        var b = r + this.height;
+        var x2 = otherobj.x;
+        var y2 = otherobj.y;
+        var r2 = otherobj.x + otherobj.width;
+        var b2 = r2 + otherobj.height;
+
+        if(r > x2)
+        {
+            this.collideArr[2] = 1;
+        }
+
+        else if(x <= r2)
+        {
+            this.collideArr[3] = 1;
+        }
+
+        else if (b > y2)
+        {
+            this.collideArr[1] = 1;
+        }
+
+        else if(y <= b2)
+        {
+            this.collideArr[0] = 1;
+        }
+
+        //Run the collision detection
+        /*
+        if(collides(x, y, r, b, x2, y2, r2, b2))
+        {
+            return true;
+        }
+
+        else
+        {
+           return false;
+        } */
     }),
 
     //Function to check if an object is at the boundaries of the screen
@@ -246,7 +286,9 @@ function object(width, height, source, x, y, health, frame, type)
         {
             this.collideArr[3] = 1;
         }
-    })
+
+        return;
+    });
 }
 
 //Determines if we are at a specified interval for animation
@@ -280,6 +322,13 @@ function updateGameArea()
 
     //Check if the player collided with a boundary
     player.checkBounds();
+
+    //Check if the player collided with
+    /* Commenting for now as it doesn't work 
+    staticObjects.forEach(function(x)
+    {
+        player.checkCollision(x);
+    });  */
 
     //Set Values if the player is trying to move the piece
     if (gameArea.keys && gameArea.keys[37]) //Left
@@ -318,6 +367,13 @@ function updateGameArea()
     //Update the positions
     player.newPos();
     player.update();
+}
+
+//Basic collision detection function for 2 boxes
+//Only works for polygons
+function collides(x, y, r, b, x2, y2, r2, b2) {
+    return !(r <= x2 || x > r2 ||
+             b <= y2 || y > b2);
 }
 
 /* Legacy Start Image Code*/
