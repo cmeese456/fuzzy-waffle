@@ -28,13 +28,28 @@ function startGame()
     //Initialize the map
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
 
+    //Create fountain objects
+    var fountain1 = new object(96, 94, "images/fountain2.png", 100, 50, 0, 0, "staticAnimated");
+    var fountain2 = new object(96, 94, "images/fountain2.png", 100, 550, 0, 0, "staticAnimated");
+    var fountain3 = new object(96, 94, "images/fountain2.png", 1080, 50, 0, 0, "staticAnimated");
+    var fountain4 = new object(96, 94, "images/fountain2.png", 1080, 550, 0, 0, "staticAnimated");
+    staticObjects.push(fountain1);
+    staticObjects.push(fountain2);
+    staticObjects.push(fountain3);
+    staticObjects.push(fountain4);
+
     //Create enemies here
 
     //Initialize Score
     //score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
-    //Start the game
-    gameArea.start();
+    //Load background image
+    //May want to load all images here but for now the player image is having no issues with loads
+    backgroundImage = new Image();
+    backgroundImage.src = "images/background_tile.png";
+    backgroundImage.onload = function(){
+        gameArea.start();
+    };
 }
 
 /* gameArea variable which initializes the canvas, sets up and draws the initial background
@@ -56,7 +71,7 @@ var gameArea =
         document.body.insertBefore(this.canvas, document.body.childNodes[0]); //Inserts at front
 
         //Setup the initial background and fill it
-        pattern = this.context.createPattern(map.image, "repeat");
+        pattern = this.context.createPattern(backgroundImage, "repeat");
         this.context.fillStyle = pattern;
         this.context.fillRect(map.x, map.y, map.width, map.height);
 
@@ -113,8 +128,13 @@ function object(width, height, source, x, y, health, frame, type)
     //Set some additional parameters for the object
     this.collideArr = [0, 0, 0, 0]; //Handles collision
     
-    this.image = new Image(); //Creates an image object
-    this.image.src = source; //Sets the source to point to our image file location
+    //This initializes the image for the created object
+    //However we initialize background before we start the game
+    if(type != 'background')
+    {
+        this.image = new Image(); //Creates an image object
+        this.image.src = source; //Sets the source to point to our image file location
+    }
 
     //Update function to handle updating the position of objects
     (this.update = function() 
@@ -154,8 +174,30 @@ function object(width, height, source, x, y, health, frame, type)
         //Handle drawing the background
         else if(type == 'background')
         {
-            ctx.fillStyle = source;
+            //Set the fill style to be the pattern we established before game launch
+            //Then use it to fill the canvas with a rectangle
+            ctx.fillStyle = pattern;
             ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+
+        else if(type == 'staticAnimated')
+        {
+            //Draw the image
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+
+            //Update animation frame if needed
+            if(everyinterval(5))
+            {
+                if(this.frame == 2)
+                {
+                    this.frame = 0;
+                }
+
+                else
+                {
+                    this.frame = this.frame + 1;
+                }
+            }
         }
     }),
 
@@ -267,6 +309,11 @@ function updateGameArea()
         if (player.collideArr[0] == 0) player.speedY = 8;
         else player.speedY = 0;
     }
+
+    //Redraw static objects
+    staticObjects.forEach(function(x){
+        x.update();
+    });
 
     //Update the positions
     player.newPos();
