@@ -4,40 +4,19 @@ var enemies = []; //Array of enemies
 var staticObjects  = []; //Array of static objects
 var score; //Tracks the score
 var map; //Variable to handle the background image
-var startCanvas; //Canvas used for the startgame functionality
-var startImage; //Image used in the starting screen canvas above
 var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
+//var startCanvas; //Canvas used for the startgame functionality
+//var startImage; //Image used in the starting screen canvas above
 
 //Variables for dynamic height and width, commenting to save but 
 //Static window size probably best option
-var wWidth = Math.floor(window.innerWidth/8.0) * 8;
-var wHeight = Math.floor(window.innerHeight/8.0) * 8;
+//var wWidth = Math.floor(window.innerWidth/8.0) * 8;
+//var wHeight = Math.floor(window.innerHeight/8.0) * 8;
 
+//Game Window Dimensions
 var canvasHeight = 720;
 var canvasWidth = 1280;
-
-/* This function handles the start game screen and runs on initial page load*/
-$(function(){
-    //create a canvas and append it to the HTML body
-    startCanvas = document.createElement("canvas");
-    startCanvas.id = "startCanvas";
-    startCanvas.width = canvasWidth;
-    startCanvas.height  = canvasHeight;
-    document.body.appendChild(startCanvas);
-  
-    //logic for switching between background images
-    startImage = new Image();
-    var count = 0;
-    startImage.src = "images/start-screen.png"
-    startImage.addEventListener('load',function(){
-      startCanvas.getContext("2d").drawImage(startImage,0,0,startCanvas.width,startCanvas.height)
-    });
-  
-    //set its event listener to run startGame function when the user clicks
-    $('#startCanvas').on("click", startGame);
-});
-
 
 /* This function handles starting the game by initializing players, objects and enemies
     As well as setting up the map */
@@ -172,6 +151,7 @@ function object(width, height, source, x, y, health, frame, type)
             }
         }
 
+        //Handle drawing the background
         else if(type == 'background')
         {
             ctx.fillStyle = source;
@@ -292,3 +272,24 @@ function updateGameArea()
     player.newPos();
     player.update();
 }
+
+/* Legacy Start Image Code*/
+/*$(function(){
+    //create a canvas and append it to the HTML body
+    startCanvas = document.createElement("canvas");
+    startCanvas.id = "startCanvas";
+    startCanvas.width = canvasWidth;
+    startCanvas.height  = canvasHeight;
+    document.body.appendChild(startCanvas);
+  
+    //logic for switching between background images
+    startImage = new Image();
+    var count = 0;
+    startImage.src = "images/start-screen.png"
+    startImage.addEventListener('load',function(){
+      startCanvas.getContext("2d").drawImage(startImage,0,0,startCanvas.width,startCanvas.height)
+    });
+  
+    //set its event listener to run startGame function when the user clicks
+    $('#startCanvas').on("click", startGame);
+}); */
