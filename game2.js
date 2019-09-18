@@ -44,10 +44,10 @@ $(function(){
 function startGame()
 {
     //Create the player here
-    player = new object(16, 22, "images/character_up.png", 0, 0, 100, 64, 64, 0, "player");
+    player = new object(64, 88, "images/character_up_large.png", 0, 0, 100, 0, "player");
 
     //Initialize the map
-    map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, 0, 0, "background");
+    map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
 
     //Create enemies here
 
@@ -119,7 +119,7 @@ var gameArea =
 };
 
 /* Function to create game objects. Not all fields need to be used for every object */
-function object(width, height, source, x, y, health, scaledW, scaledH, frame, type)
+function object(width, height, source, x, y, health, frame, type)
 {
     //Initialize with passed in values
     this.width = width;
@@ -128,8 +128,6 @@ function object(width, height, source, x, y, health, scaledW, scaledH, frame, ty
     this.x = x;
     this.y = y;
     this.health = health;
-    this.scaledW = scaledW; //Plan to remove this and scale objects outside JS
-    this.scaledH = scaledH; //Plan to remove this and scale objects outside JS
     this.frame = frame; //Only used for animating
     this.type = type; //Refers to the type of object for determining how to process
 
@@ -157,7 +155,7 @@ function object(width, height, source, x, y, health, scaledW, scaledH, frame, ty
             //Draw the player object using drawImage
             //This allows us to dynamically crop the sprite map
             //image, sx, sy, swidth, sheight, x, y, width, height(64,64)
-            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.scaledW, this.scaledH);
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update the frame if we are at a 10th interation
             if(everyinterval(10))
@@ -200,9 +198,9 @@ function object(width, height, source, x, y, health, scaledW, scaledH, frame, ty
     {
         //Grab the coordinates of the player object
         var myleft = this.x;
-        var myright = this.x + this.scaledW;
+        var myright = this.x + this.width;
         var mytop = this.y;
-        var mybottom = this.y + this.scaledH;
+        var mybottom = this.y + this.height;
         var maxHeight = gameArea.canvas.height;
         var maxWidth = gameArea.canvas.width;
 
@@ -264,28 +262,28 @@ function updateGameArea()
     //Set Values if the player is trying to move the piece
     if (gameArea.keys && gameArea.keys[37]) //Left
     {
-        player.image.src = "images/character_left.png";
+        player.image.src = "images/character_left_large.png";
         if (player.collideArr[3] == 0) player.speedX = -8;
         else player.speedX = 0;
     }
 
     if (gameArea.keys && gameArea.keys[39]) //Right
     {
-        player.image.src = "images/character_right.png";
+        player.image.src = "images/character_right_large.png";
         if (player.collideArr[2] == 0) player.speedX = 8;
         else player.speedX = 0;
     }
 
     if (gameArea.keys && gameArea.keys[38]) //Up
     {
-        player.image.src = "images/character_up.png";
+        player.image.src = "images/character_up_large.png";
         if (player.collideArr[1] == 0) player.speedY = -8;
         else player.speedY = 0;
     }
 
     if (gameArea.keys && gameArea.keys[40]) //Down
     {
-        player.image.src = "images/character_down.png";
+        player.image.src = "images/character_down_large.png";
         if (player.collideArr[0] == 0) player.speedY = 8;
         else player.speedY = 0;
     }
