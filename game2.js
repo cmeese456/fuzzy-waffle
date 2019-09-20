@@ -29,10 +29,10 @@ function startGame()
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
 
     //Create fountain objects
-    var fountain1 = new object(96, 94, "images/fountain2.png", 100, 50, 0, 0, "staticAnimated");
-    var fountain2 = new object(96, 94, "images/fountain2.png", 100, 550, 0, 0, "staticAnimated");
-    var fountain3 = new object(96, 94, "images/fountain2.png", 1080, 50, 0, 0, "staticAnimated");
-    var fountain4 = new object(96, 94, "images/fountain2.png", 1080, 550, 0, 0, "staticAnimated");
+    var fountain1 = new object(96, 94, "images/fountain3.png", 100, 50, 0, 0, "staticAnimated");
+    var fountain2 = new object(96, 94, "images/fountain3.png", 100, 550, 0, 0, "staticAnimated");
+    var fountain3 = new object(96, 94, "images/fountain3.png", 1080, 50, 0, 0, "staticAnimated");
+    var fountain4 = new object(96, 94, "images/fountain3.png", 1080, 550, 0, 0, "staticAnimated");
     staticObjects.push(fountain1);
     staticObjects.push(fountain2);
     staticObjects.push(fountain3);
@@ -186,7 +186,7 @@ function object(width, height, source, x, y, health, frame, type)
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update animation frame if needed
-            if(everyinterval(5))
+            if(everyinterval(4))
             {
                 if(this.frame == 2)
                 {
