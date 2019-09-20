@@ -29,14 +29,22 @@ function startGame()
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
 
     //Create fountain objects
-    var fountain1 = new object(96, 94, "images/fountain3.png", 100, 50, 0, 0, "staticAnimated");
-    var fountain2 = new object(96, 94, "images/fountain3.png", 100, 550, 0, 0, "staticAnimated");
-    var fountain3 = new object(96, 94, "images/fountain3.png", 1080, 50, 0, 0, "staticAnimated");
-    var fountain4 = new object(96, 94, "images/fountain3.png", 1080, 550, 0, 0, "staticAnimated");
+    var fountain1 = new object(96, 94, "images/fountain3.png", 100, 50, 0, 0, "fountain");
+    var fountain2 = new object(96, 94, "images/fountain3.png", 100, 550, 0, 0, "fountain");
+    var fountain3 = new object(96, 94, "images/fountain3.png", 1080, 50, 0, 0, "fountain");
+    var fountain4 = new object(96, 94, "images/fountain3.png", 1080, 550, 0, 0, "fountain");
+    var tree1 = new object(64, 64, "images/trees_final.png", 500, 0, 0, 0, "tree");
+    var tree2 = new object(64, 64, "images/trees_final.png", 500, 64, 0, 0, "tree");
+    var tree3 = new object(64, 64, "images/trees_final.png", 500, 64*2, 0, 0, "tree");
+    var tree4 = new object(64, 64, "images/trees_final.png", 500, 64*3, 0, 0, "tree");
     staticObjects.push(fountain1);
     staticObjects.push(fountain2);
     staticObjects.push(fountain3);
     staticObjects.push(fountain4);
+    staticObjects.push(tree1);
+    staticObjects.push(tree2);
+    staticObjects.push(tree3);
+    staticObjects.push(tree4);
 
     //Create enemies here
 
@@ -180,7 +188,7 @@ function object(width, height, source, x, y, health, frame, type)
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
 
-        else if(type == 'staticAnimated')
+        else if(type == 'fountain')
         {
             //Draw the image
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
@@ -199,6 +207,27 @@ function object(width, height, source, x, y, health, frame, type)
                 }
             }
         }
+
+        else if(type == 'tree')
+        {
+            //Draw the tree
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+
+            //Update the animation if needed
+            if(everyinterval(50))
+            {
+                if(this.frame == 15)
+                {
+                    this.frame = 15;
+                }
+
+                else
+                {
+                    this.frame = this.frame + 1;
+                }
+            }
+        }
+
     }),
 
     //Function to handle updating the position of a given object
