@@ -23,7 +23,7 @@ var canvasWidth = 1280;
 function startGame()
 {
     //Create the player here
-    player = new object(64, 88, "images/character_up_large.png", 650, (720 - 88), 100, 0, "player");
+    player = new object(64, 88, "images/character_up_large.png", 800, 600, 100, 0, "player");
 
     //Initialize the map
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
@@ -337,12 +337,12 @@ function updateGameArea()
     gameArea.clear();
 
     //Increment frame rate
-    gameArea.frameNo += 1
+    gameArea.frameNo += 1;
 
     //Reset the collide array and player speed before we determine what to do
     player.speedX = 0;
     player.speedY = 0;
-    player.collideArr = [0, 0, 0, 0]
+    player.collideArr = [0, 0, 0, 0];
 
     //Redraw and update the map
     map.update();
