@@ -23,7 +23,7 @@ var canvasWidth = 1280;
 function startGame()
 {
     //Create the player here
-    player = new object(64, 88, "images/character_up_large.png", 0, 0, 100, 0, "player");
+    player = new object(64, 88, "images/character_up_large.png", 650, (720 - 88), 100, 0, "player");
 
     //Initialize the map
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
