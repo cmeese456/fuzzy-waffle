@@ -1,7 +1,8 @@
 /* Declare Game Variables Gere */
 var player; //Player Variable
 var enemies = []; //Array of enemies
-var staticObjects  = []; //Array of static objects
+var animatedObjects  = []; //Array of animated objects
+var staticObjects = []; //Array of static objects
 var score; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
@@ -23,28 +24,40 @@ var canvasWidth = 1280;
 function startGame()
 {
     //Create the player here
-    player = new object(64, 88, "images/character_up_large.png", 800, 600, 100, 0, "player");
+    player = new object(64, 88, "images/character_up_large.png", 600, 600, 100, 0, "player");
 
     //Initialize the map
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
 
     //Create fountain objects
-    var fountain1 = new object(96, 94, "images/fountain3.png", 100, 50, 0, 0, "fountain");
-    var fountain2 = new object(96, 94, "images/fountain3.png", 100, 550, 0, 0, "fountain");
-    var fountain3 = new object(96, 94, "images/fountain3.png", 1080, 50, 0, 0, "fountain");
-    var fountain4 = new object(96, 94, "images/fountain3.png", 1080, 550, 0, 0, "fountain");
-    var tree1 = new object(64, 64, "images/trees_final.png", 500, 0, 0, 0, "tree");
-    var tree2 = new object(64, 64, "images/trees_final.png", 500, 64, 0, 0, "tree");
-    var tree3 = new object(64, 64, "images/trees_final.png", 500, 64*2, 0, 0, "tree");
-    var tree4 = new object(64, 64, "images/trees_final.png", 500, 64*3, 0, 0, "tree");
-    staticObjects.push(fountain1);
-    staticObjects.push(fountain2);
-    staticObjects.push(fountain3);
-    staticObjects.push(fountain4);
-    staticObjects.push(tree1);
-    staticObjects.push(tree2);
-    staticObjects.push(tree3);
-    staticObjects.push(tree4);
+    var fountain1 = new object(96, 94, "images/fountain3.png", 0, 0, 0, 0, "fountain");
+    var fountain2 = new object(96, 94, "images/fountain3.png", 0, 632, 0, 0, "fountain");
+    var fountain3 = new object(96, 94, "images/fountain3.png", 1184, 0, 0, 0, "fountain");
+    var fountain4 = new object(96, 94, "images/fountain3.png", 1184, 632, 0, 0, "fountain");
+    var fountain5 = new object(96, 94, "images/fountain3.png", 600, 240, 0, 0, "fountain");
+    var tree1 = new object(64, 64, "images/trees_final.png", 488, 656, 0, 0, "tree");
+    var tree2 = new object(64, 64, "images/trees_final.png", 488, 600, 0, 0, "tree");
+    var tree3 = new object(64, 64, "images/trees_final.png", 720, 656, 0, 0, "tree");
+    var tree4 = new object(64, 64, "images/trees_final.png", 720, 600, 0, 0, "tree");
+    var tree5 = new object(64, 64, "images/trees_final.png", 536, 280, 0, 0, "tree");
+    var tree6 = new object(64, 64, "images/trees_final.png", 536, 224, 0, 0, "tree");
+    var tree7 = new object(64, 64, "images/trees_final.png", 696, 224, 0, 0, "tree");
+    var tree8 = new object(64, 64, "images/trees_final.png", 696, 280, 0, 0, "tree");
+    var walkway1 = new object(160, 192, "images/walkway.png", 560, 600, 0, 0, "static");
+    animatedObjects.push(fountain1);
+    animatedObjects.push(fountain2);
+    animatedObjects.push(fountain3);
+    animatedObjects.push(fountain4);
+    animatedObjects.push(fountain5);
+    animatedObjects.push(tree1);
+    animatedObjects.push(tree2);
+    animatedObjects.push(tree3);
+    animatedObjects.push(tree4);
+    animatedObjects.push(tree5);
+    animatedObjects.push(tree6);
+    animatedObjects.push(tree7);
+    animatedObjects.push(tree8);
+    staticObjects.push(walkway1);
 
     //Create enemies here
 
@@ -228,6 +241,11 @@ function object(width, height, source, x, y, health, frame, type)
             }
         }
 
+        else if(type == "static")
+        {
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        }
+
     }),
 
     //Function to handle updating the position of a given object
@@ -354,7 +372,7 @@ function updateGameArea()
 
     //Check if the player collided with
     /* Commenting for now as it doesn't work 
-    staticObjects.forEach(function(x)
+    animatedObjects.forEach(function(x)
     {
         player.checkCollision(x);
     });  */
@@ -388,8 +406,13 @@ function updateGameArea()
         else player.speedY = 0;
     }
 
-    //Redraw static objects
-    staticObjects.forEach(function(x){
+    //Redraw animated objects
+    animatedObjects.forEach(function(x){
+        x.update();
+    });
+
+     //Redraw static objects
+     staticObjects.forEach(function(x){
         x.update();
     });
 
