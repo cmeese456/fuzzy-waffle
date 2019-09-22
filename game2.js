@@ -35,6 +35,13 @@ function startGame()
     var fountain3 = new object(96, 94, "images/fountain3.png", 1184, 0, 0, 0, "fountain");
     var fountain4 = new object(96, 94, "images/fountain3.png", 1184, 632, 0, 0, "fountain");
     var fountain5 = new object(96, 94, "images/fountain3.png", 600, 240, 0, 0, "fountain");
+    animatedObjects.push(fountain1);
+    animatedObjects.push(fountain2);
+    animatedObjects.push(fountain3);
+    animatedObjects.push(fountain4);
+    animatedObjects.push(fountain5);
+
+    //Create tree objects
     var tree1 = new object(64, 64, "images/trees_final.png", 488, 656, 0, 0, "tree");
     var tree2 = new object(64, 64, "images/trees_final.png", 488, 600, 0, 0, "tree");
     var tree3 = new object(64, 64, "images/trees_final.png", 720, 656, 0, 0, "tree");
@@ -43,12 +50,6 @@ function startGame()
     var tree6 = new object(64, 64, "images/trees_final.png", 536, 224, 0, 0, "tree");
     var tree7 = new object(64, 64, "images/trees_final.png", 696, 224, 0, 0, "tree");
     var tree8 = new object(64, 64, "images/trees_final.png", 696, 280, 0, 0, "tree");
-    var walkway1 = new object(160, 192, "images/walkway.png", 560, 600, 0, 0, "static");
-    animatedObjects.push(fountain1);
-    animatedObjects.push(fountain2);
-    animatedObjects.push(fountain3);
-    animatedObjects.push(fountain4);
-    animatedObjects.push(fountain5);
     animatedObjects.push(tree1);
     animatedObjects.push(tree2);
     animatedObjects.push(tree3);
@@ -57,6 +58,43 @@ function startGame()
     animatedObjects.push(tree6);
     animatedObjects.push(tree7);
     animatedObjects.push(tree8);
+
+    //Create static bush objects
+    var lrBush1 = new object(64, 32, "images/bush_left_right.png", 0, 96, 0, 0, "static"); //Start top left
+    var lrBush2 = new object(64, 32, "images/bush_left_right.png", 48, 96, 0, 0, "static");
+    var udBush1 = new object(32, 64, "images/bush_up_down.png", 104, 0, 0, 0, "static");
+    var udBush2 = new object(32, 64, "images/bush_up_down.png", 104, 64, 0, 0, "static");
+    var lrBush3 = new object(64, 32, "images/bush_left_right.png", 0, 600, 0, 0, "static"); //Start bottom left
+    var lrBush4 = new object(64, 32, "images/bush_left_right.png", 48, 600, 0, 0, "static");
+    var udBush3 = new object(32, 64, "images/bush_up_down.png", 104, 600, 0, 0, "static");
+    var udBush4 = new object(32, 64, "images/bush_up_down.png", 104, 664, 0, 0, "static");
+    var lrBush5 = new object(64, 32, "images/bush_left_right.png", 1216, 96, 0, 0, "static"); //Start top right
+    var lrBush6 = new object(64, 32, "images/bush_left_right.png", 1168, 96, 0, 0, "static");
+    var udBush5 = new object(32, 64, "images/bush_up_down.png", 1144, 0, 0, 0, "static");
+    var udBush6 = new object(32, 64, "images/bush_up_down.png", 1144, 64, 0, 0, "static");
+    var lrBush7 = new object(64, 32, "images/bush_left_right.png", 1216, 600, 0, 0, "static"); //Start bottom right
+    var lrBush8 = new object(64, 32, "images/bush_left_right.png", 1168, 600, 0, 0, "static");
+    var udBush7 = new object(32, 64, "images/bush_up_down.png", 1144, 600, 0, 0, "static");
+    var udBush8 = new object(32, 64, "images/bush_up_down.png", 1144, 664, 0, 0, "static");
+    staticObjects.push(lrBush2);
+    staticObjects.push(lrBush1);
+    staticObjects.push(udBush1);
+    staticObjects.push(udBush2);
+    staticObjects.push(lrBush4);
+    staticObjects.push(lrBush3);
+    staticObjects.push(udBush3);
+    staticObjects.push(udBush4);
+    staticObjects.push(lrBush5);
+    staticObjects.push(lrBush6);
+    staticObjects.push(udBush5);
+    staticObjects.push(udBush6);
+    staticObjects.push(lrBush7);
+    staticObjects.push(lrBush8);
+    staticObjects.push(udBush7);
+    staticObjects.push(udBush8);
+
+    //Create static objects
+    var walkway1 = new object(160, 192, "images/walkway.png", 560, 600, 0, 0, "static");
     staticObjects.push(walkway1);
 
     //Create enemies here
