@@ -93,9 +93,19 @@ function startGame()
     staticObjects.push(udBush7);
     staticObjects.push(udBush8);
 
-    //Create static objects
+    //Create static background objects
     var walkway1 = new object(160, 192, "images/walkway.png", 560, 600, 0, 0, "static");
+    var hole = new object(64, 72, "images/hole.png", 960, 600, 0, 0, "static");
+    var bones = new object(96, 64, "images/bones.png", 840, 616, 0, 0, "static");
+    var headstone1 = new object(48, 64, "images/headstone.png", 240, 640, 0, 0, "static");
+    var headstone2 = new object(48, 64, "images/headstone.png", 320, 600, 0, 0, "static");
+    var headstone3 = new object(48, 64, "images/headstone.png", 400, 616, 0, 0, "static");
     staticObjects.push(walkway1);
+    staticObjects.push(hole);
+    staticObjects.push(bones);
+    staticObjects.push(headstone1);
+    staticObjects.push(headstone2);
+    staticObjects.push(headstone3);
 
     //Create enemies here
 
