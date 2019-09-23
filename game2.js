@@ -1,7 +1,8 @@
 /* Declare Game Variables Gere */
 var player; //Player Variable
 var enemies = []; //Array of enemies
-var staticObjects  = []; //Array of static objects
+var animatedObjects  = []; //Array of animated objects
+var staticObjects = []; //Array of static objects
 var score; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
@@ -23,20 +24,92 @@ var canvasWidth = 1280;
 function startGame()
 {
     //Create the player here
-    player = new object(64, 88, "images/character_up_large.png", 0, 0, 100, 0, "player");
+    player = new object(64, 88, "images/character_up_large.png", 600, 600, 100, 0, "player");
 
     //Initialize the map
     map = new object(canvasWidth, canvasHeight, "images/background_tile.png", 0, 0, 0, 0, "background");
 
     //Create fountain objects
-    var fountain1 = new object(96, 94, "images/fountain2.png", 100, 50, 0, 0, "staticAnimated");
-    var fountain2 = new object(96, 94, "images/fountain2.png", 100, 550, 0, 0, "staticAnimated");
-    var fountain3 = new object(96, 94, "images/fountain2.png", 1080, 50, 0, 0, "staticAnimated");
-    var fountain4 = new object(96, 94, "images/fountain2.png", 1080, 550, 0, 0, "staticAnimated");
-    staticObjects.push(fountain1);
-    staticObjects.push(fountain2);
-    staticObjects.push(fountain3);
-    staticObjects.push(fountain4);
+    var fountain1 = new object(96, 94, "images/fountain3.png", 0, 0, 0, 0, "fountain");
+    var fountain2 = new object(96, 94, "images/fountain3.png", 0, 632, 0, 0, "fountain");
+    var fountain3 = new object(96, 94, "images/fountain3.png", 1184, 0, 0, 0, "fountain");
+    var fountain4 = new object(96, 94, "images/fountain3.png", 1184, 632, 0, 0, "fountain");
+    var fountain5 = new object(96, 94, "images/fountain3.png", 600, 240, 0, 0, "fountain");
+    animatedObjects.push(fountain1);
+    animatedObjects.push(fountain2);
+    animatedObjects.push(fountain3);
+    animatedObjects.push(fountain4);
+    animatedObjects.push(fountain5);
+
+    //Create tree objects
+    var tree1 = new object(64, 64, "images/trees_final.png", 488, 656, 0, 0, "tree");
+    var tree2 = new object(64, 64, "images/trees_final.png", 488, 600, 0, 0, "tree");
+    var tree3 = new object(64, 64, "images/trees_final.png", 720, 656, 0, 0, "tree");
+    var tree4 = new object(64, 64, "images/trees_final.png", 720, 600, 0, 0, "tree");
+    var tree5 = new object(64, 64, "images/trees_final.png", 536, 280, 0, 0, "tree");
+    var tree6 = new object(64, 64, "images/trees_final.png", 536, 224, 0, 0, "tree");
+    var tree7 = new object(64, 64, "images/trees_final.png", 696, 224, 0, 0, "tree");
+    var tree8 = new object(64, 64, "images/trees_final.png", 696, 280, 0, 0, "tree");
+    animatedObjects.push(tree1);
+    animatedObjects.push(tree2);
+    animatedObjects.push(tree3);
+    animatedObjects.push(tree4);
+    animatedObjects.push(tree5);
+    animatedObjects.push(tree6);
+    animatedObjects.push(tree7);
+    animatedObjects.push(tree8);
+
+    //Create static bush objects
+    var lrBush1 = new object(64, 32, "images/bush_left_right.png", 0, 96, 0, 0, "static"); //Start top left
+    var lrBush2 = new object(64, 32, "images/bush_left_right.png", 48, 96, 0, 0, "static");
+    var udBush1 = new object(32, 64, "images/bush_up_down.png", 104, 0, 0, 0, "static");
+    var udBush2 = new object(32, 64, "images/bush_up_down.png", 104, 64, 0, 0, "static");
+    var lrBush3 = new object(64, 32, "images/bush_left_right.png", 0, 600, 0, 0, "static"); //Start bottom left
+    var lrBush4 = new object(64, 32, "images/bush_left_right.png", 48, 600, 0, 0, "static");
+    var udBush3 = new object(32, 64, "images/bush_up_down.png", 104, 600, 0, 0, "static");
+    var udBush4 = new object(32, 64, "images/bush_up_down.png", 104, 664, 0, 0, "static");
+    var lrBush5 = new object(64, 32, "images/bush_left_right.png", 1216, 96, 0, 0, "static"); //Start top right
+    var lrBush6 = new object(64, 32, "images/bush_left_right.png", 1168, 96, 0, 0, "static");
+    var udBush5 = new object(32, 64, "images/bush_up_down.png", 1144, 0, 0, 0, "static");
+    var udBush6 = new object(32, 64, "images/bush_up_down.png", 1144, 64, 0, 0, "static");
+    var lrBush7 = new object(64, 32, "images/bush_left_right.png", 1216, 600, 0, 0, "static"); //Start bottom right
+    var lrBush8 = new object(64, 32, "images/bush_left_right.png", 1168, 600, 0, 0, "static");
+    var udBush7 = new object(32, 64, "images/bush_up_down.png", 1144, 600, 0, 0, "static");
+    var udBush8 = new object(32, 64, "images/bush_up_down.png", 1144, 664, 0, 0, "static");
+    staticObjects.push(lrBush2);
+    staticObjects.push(lrBush1);
+    staticObjects.push(udBush1);
+    staticObjects.push(udBush2);
+    staticObjects.push(lrBush4);
+    staticObjects.push(lrBush3);
+    staticObjects.push(udBush3);
+    staticObjects.push(udBush4);
+    staticObjects.push(lrBush5);
+    staticObjects.push(lrBush6);
+    staticObjects.push(udBush5);
+    staticObjects.push(udBush6);
+    staticObjects.push(lrBush7);
+    staticObjects.push(lrBush8);
+    staticObjects.push(udBush7);
+    staticObjects.push(udBush8);
+
+    //Create static background objects
+    var walkway1 = new object(160, 192, "images/walkway.png", 560, 600, 0, 0, "static");
+    var hole = new object(64, 72, "images/hole.png", 960, 600, 0, 0, "static");
+    var bones = new object(96, 64, "images/bones.png", 840, 616, 0, 0, "static");
+    var headstone1 = new object(48, 64, "images/headstone.png", 240, 640, 0, 0, "static");
+    var headstone2 = new object(48, 64, "images/headstone.png", 320, 600, 0, 0, "static");
+    var headstone3 = new object(48, 64, "images/headstone.png", 400, 616, 0, 0, "static");
+    var trapdoor = new object(96, 96, "images/trapdoor.png", 840, 40, 0, 0, "static");
+    var doghouse = new object(72, 96, "images/doghouse.png", 240, 32, 0, 0, "static");
+    staticObjects.push(walkway1);
+    staticObjects.push(hole);
+    staticObjects.push(bones);
+    staticObjects.push(headstone1);
+    staticObjects.push(headstone2);
+    staticObjects.push(headstone3);
+    staticObjects.push(trapdoor);
+    staticObjects.push(doghouse);
 
     //Create enemies here
 
@@ -180,13 +253,13 @@ function object(width, height, source, x, y, health, frame, type)
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
 
-        else if(type == 'staticAnimated')
+        else if(type == 'fountain')
         {
             //Draw the image
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update animation frame if needed
-            if(everyinterval(5))
+            if(everyinterval(4))
             {
                 if(this.frame == 2)
                 {
@@ -199,6 +272,32 @@ function object(width, height, source, x, y, health, frame, type)
                 }
             }
         }
+
+        else if(type == 'tree')
+        {
+            //Draw the tree
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+
+            //Update the animation if needed
+            if(everyinterval(50))
+            {
+                if(this.frame == 15)
+                {
+                    this.frame = 15;
+                }
+
+                else
+                {
+                    this.frame = this.frame + 1;
+                }
+            }
+        }
+
+        else if(type == "static")
+        {
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        }
+
     }),
 
     //Function to handle updating the position of a given object
@@ -212,47 +311,56 @@ function object(width, height, source, x, y, health, frame, type)
     //Function to handle collision detection between an object and other objects
     (this.checkCollision = function(otherobj)
     {
-        //Grab the necessary coordinate data from both objects
-        var x = this.x;
-        var y = this.y;
-        var r = this.x + this.width;
-        var b = r + this.height;
-        var x2 = otherobj.x;
-        var y2 = otherobj.y;
-        var r2 = otherobj.x + otherobj.width;
-        var b2 = r2 + otherobj.height;
-
-        if(r > x2)
+        //Check Left
+        //If the left side of this object is inside or touching another object
+        if(this.x <= (otherobj.x + otherobj.width))
         {
-            this.collideArr[2] = 1;
+            //If the other object is within the same verticle plane as this object
+            //OR if this object is within the same verticle plane as the other object
+            if(((otherobj.y >= this.y) && (otherobj.y <= (this.y + this.height))) || ((this.y >= otherobj.y) && (this.y <= (otherobj.y + otherobj.height))))
+            {
+                //Set the cell of the collide array representing left to true
+                this.collideArr[3] = 1;
+            }
         }
 
-        else if(x <= r2)
+        //Check Right
+        //If the right side of this object is inside or touching another object
+        if((this.x + this.width) >= otherobj.x)
         {
-            this.collideArr[3] = 1;
+            //If the other object is within the same verticle plane as this object
+            //OR if this object is within the same verticle plane as the other object
+            if(((otherobj.y >= this.y) && (otherobj.y <= (this.y + this.height))) || ((this.y >= otherobj.y) && (this.y <= (otherobj.y + otherobj.height))))
+            {
+                //Set the cell of the collide array representing right to true
+                this.collideArr[2] = 1;
+            }
         }
 
-        else if (b > y2)
+        //Check Top
+        //If the top side of this object is inside or touching the bottom side of another object
+        if(this.y <= (otherobj.y + otherobj.height))
         {
-            this.collideArr[1] = 1;
+            //If the other object is within the same horizontal plane as this object
+            //OR if this object is within the same hotizontal plane of the other object
+            if(((otherobj.x >= this.x) && (otherobj.x <= (this.x + this.width))) || ((this.x >= otherobj.x) && (this.x <= (otherobj.x + otherobj.width))))
+            {
+                //Set the cell of the collide array representing top to true
+                this.collideArr[1] = 1;
+            }
         }
 
-        else if(y <= b2)
+        //Check Bottom
+        if((this.y + this.height) >= otherobj.y)
         {
-            this.collideArr[0] = 1;
+            //If the other object is within the same horizontal plane as this object
+            //OR if this object is within the same hotizontal plane of the other object
+            if(((otherobj.x >= this.x) && (otherobj.x <= (this.x + this.width))) || ((this.x >= otherobj.x) && (this.x <= (otherobj.x + otherobj.width))))
+            {
+                //Set the cell of the collide array representing top to true
+                this.collideArr[0] = 1;
+            }
         }
-
-        //Run the collision detection
-        /*
-        if(collides(x, y, r, b, x2, y2, r2, b2))
-        {
-            return true;
-        }
-
-        else
-        {
-           return false;
-        } */
     }),
 
     //Function to check if an object is at the boundaries of the screen
@@ -308,12 +416,12 @@ function updateGameArea()
     gameArea.clear();
 
     //Increment frame rate
-    gameArea.frameNo += 1
+    gameArea.frameNo += 1;
 
     //Reset the collide array and player speed before we determine what to do
     player.speedX = 0;
     player.speedY = 0;
-    player.collideArr = [0, 0, 0, 0]
+    player.collideArr = [0, 0, 0, 0];
 
     //Redraw and update the map
     map.update();
@@ -323,12 +431,22 @@ function updateGameArea()
     //Check if the player collided with a boundary
     player.checkBounds();
 
-    //Check if the player collided with
-    /* Commenting for now as it doesn't work 
-    staticObjects.forEach(function(x)
+    //Check if the player collided with any objects
+    /*
+    animatedObjects.forEach(function(x)
     {
         player.checkCollision(x);
-    });  */
+    }); */
+    
+    /*
+    //Fixes cases where the player walked inside of an object and is locked on all sides
+    if(player.collideArr[0] == 1 && player.collideArr[1] == 1 && player.collideArr[2] == 1 && player.collideArr[3] == 1)
+    {
+        player.collideArr[0] = 0;
+        player.collideArr[1] = 0;
+        player.collideArr[2] = 0;
+        player.collideArr[3] = 0;
+    } */
 
     //Set Values if the player is trying to move the piece
     if (gameArea.keys && gameArea.keys[37]) //Left
@@ -359,8 +477,13 @@ function updateGameArea()
         else player.speedY = 0;
     }
 
-    //Redraw static objects
-    staticObjects.forEach(function(x){
+    //Redraw animated objects
+    animatedObjects.forEach(function(x){
+        x.update();
+    });
+
+     //Redraw static objects
+     staticObjects.forEach(function(x){
         x.update();
     });
 
