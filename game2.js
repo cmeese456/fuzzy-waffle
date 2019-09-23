@@ -448,8 +448,7 @@ function updateGameArea() {
             0,
             "projectile",
             { 
-              'direction': 0,
-              'id': projectileId++
+              'direction': 0
             }
           )
         );
@@ -466,8 +465,7 @@ function updateGameArea() {
             0,
             "projectile",
             { 
-              'direction': 1,
-              'id': projectileId++
+              'direction': 1
             }
           )
         );
@@ -483,8 +481,7 @@ function updateGameArea() {
             0,
             "projectile",
             { 
-              'direction': 2,
-              'id': projectileId++
+              'direction': 2
             }
           )
         );
@@ -500,8 +497,7 @@ function updateGameArea() {
             0,
             "projectile",
             { 
-              'direction': 3,
-              'id': projectileId++
+              'direction': 3
             }
           )
         );
