@@ -9,6 +9,8 @@ var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
 //var startCanvas; //Canvas used for the startgame functionality
 //var startImage; //Image used in the starting screen canvas above
+var enemy1 = new object(64, 88, "images/character_right_large.png", 48, 144, 100, 0, "enemy");
+var enemy2 = new object(64, 88, "images/character_left_large.png", 1200, 400, 100, 0, "enemy");
 
 //Variables for dynamic height and width, commenting to save but 
 //Static window size probably best option
@@ -112,7 +114,7 @@ function startGame()
     staticObjects.push(doghouse);
 
     //Create enemies here
-
+    //check top
     //Initialize Score
     //score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
 
@@ -216,84 +218,74 @@ function object(width, height, source, x, y, health, frame, type)
         ctx = gameArea.context;
 
         //Handle player movement
-        if(type == 'player')
-        {
+        if (type == 'player') {
             //Stop animating if the player is not moving
-            if(this.speedX == 0 && this.speedY == 0)
-            {
+            if (this.speedX == 0 && this.speedY == 0) {
                 this.frame = 0;
             }
 
             //Draw the player object using drawImage
             //This allows us to dynamically crop the sprite map
             //image, sx, sy, swidth, sheight, x, y, width, height(64,64)
+            //console.log("x is " + this.x + " " + "y is " + this.y);
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update the frame if we are at a 10th interation
-            if(everyinterval(10))
-            {
-                if(this.frame == 3)
-                {
+            if (everyinterval(10)) {
+                if (this.frame == 3) {
                     this.frame = 0;
                 }
 
-                else
-                {
+                else {
                     this.frame = this.frame + 1;
                 }
             }
         }
 
         //Handle drawing the background
-        else if(type == 'background')
-        {
+        else if (type == 'background') {
             //Set the fill style to be the pattern we established before game launch
             //Then use it to fill the canvas with a rectangle
             ctx.fillStyle = pattern;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
 
-        else if(type == 'fountain')
-        {
+        else if (type == 'fountain') {
             //Draw the image
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update animation frame if needed
-            if(everyinterval(4))
-            {
-                if(this.frame == 2)
-                {
+            if (everyinterval(4)) {
+                if (this.frame == 2) {
                     this.frame = 0;
                 }
 
-                else
-                {
+                else {
                     this.frame = this.frame + 1;
                 }
             }
         }
 
-        else if(type == 'tree')
-        {
+        else if (type == 'tree') {
             //Draw the tree
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update the animation if needed
-            if(everyinterval(50))
-            {
-                if(this.frame == 15)
-                {
+            if (everyinterval(50)) {
+                if (this.frame == 15) {
                     this.frame = 15;
                 }
 
-                else
-                {
+                else {
                     this.frame = this.frame + 1;
                 }
             }
         }
 
-        else if(type == "static")
+        else if (type == "static") {
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        }
+        else if (type == "enemy")
         {
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
         }
@@ -421,12 +413,21 @@ function updateGameArea()
     //Reset the collide array and player speed before we determine what to do
     player.speedX = 0;
     player.speedY = 0;
+    //enemy1.speedX = 8;
+    enemy1.speedY = 0;
+    enemy2.speedY = 0;
     player.collideArr = [0, 0, 0, 0];
 
     //Redraw and update the map
     map.update();
 
     //Insert collision detection with enemies here
+    enemySwitch();
+    enemy1.newPos();
+    enemy1.update();
+
+    enemy2.newPos();
+    enemy2.update();
 
     //Check if the player collided with a boundary
     player.checkBounds();
@@ -497,6 +498,23 @@ function updateGameArea()
 function collides(x, y, r, b, x2, y2, r2, b2) {
     return !(r <= x2 || x > r2 ||
              b <= y2 || y > b2);
+}
+
+function enemySwitch()
+{
+    if (enemy1.x == 1208) {
+        enemy1.speedX = -8;
+    }
+    else if (enemy1.x == 48) {
+        enemy1.speedX = 8;
+    }
+
+    if (enemy2.x == 1200) {
+        enemy2.speedX = -8;
+    }
+    else if (enemy2.x == 48) {
+        enemy2.speedX = 8;
+    }
 }
 
 /* Legacy Start Image Code*/
