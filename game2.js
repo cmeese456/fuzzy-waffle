@@ -1,6 +1,5 @@
 /* Declare Game Variables Gere */
 var player; //Player Variable
-var enemies = []; //Array of enemies
 var animatedObjects = []; //Array of animated objects
 var staticObjects = []; //Array of static objects
 var score; //Tracks the score
@@ -9,7 +8,7 @@ var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
 //var startCanvas; //Canvas used for the startgame functionality
 //var startImage; //Image used in the starting screen canvas above
-var enemy1 = new object(
+/*var enemy1 = new object(
   64,
   88,
   "images/enemy_left.png",
@@ -28,13 +27,13 @@ var enemy2 = new object(
   100,
   0,
   "enemy"
-);
+);*/
 let projectiles = [];
 const projectileSpeed = 15;
 var lastFire = 0;
 var enemyArr = [];
-enemyArr.push(enemy1);
-enemyArr.push(enemy2);
+//enemyArr.push(enemy1);
+//enemyArr.push(enemy2);
 
 //Variables for dynamic height and width, commenting to save but
 //Static window size probably best option
@@ -594,15 +593,14 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.height
       );
       //Update the frame if we are at a 10th interation
-      if (everyinterval(10)) {
+      if (everyinterval(10)) 
+      {
         if (this.frame == 3) {
           this.frame = 0;
         } else {
           this.frame = this.frame + 1;
         }
       }
-
-      
     }
     //Handle drawing the background
     else if (type == "background") {
@@ -698,7 +696,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
         } else {
           this.frame = this.frame + 1;
         }
-      }
+      };
     } else if (type == "static") {
       ctx.drawImage(
         this.image,
@@ -712,25 +710,25 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.height
       );
     } else if (type == "enemy") {
-      ctx.drawImage(
-        this.image,
-        this.width * this.frame,
-        0,
-        this.width,
-        this.height,
-        this.x,
-        this.y,
-        this.width,
-        this.height
-      );
-
-      if (everyinterval(10)) {
-        if (this.frame == 3) {
-          this.frame = 0;
-        } else {
-          this.frame = this.frame + 1;
-        }
-      }
+        ctx.drawImage(
+            this.image,
+            this.width * this.frame,
+            0,
+            this.width,
+            this.height,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+          );
+          //Update the frame if we are at a 10th interation
+          if (everyinterval(10)) {
+            if (this.frame == 3) {
+              this.frame = 0;
+            } else {
+              this.frame = this.frame + 1;
+            }
+          };
     }
   }),
     //Function to handle updating the position of a given object
@@ -846,7 +844,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
         //Check if we collided
         var result = collides(x, y, r, b, x2, y2, r2, b2);
         return result;
-    }
+    };
 }
 
 //Determines if we are at a specified interval for animation
@@ -870,14 +868,10 @@ function updateGameArea() {
   //Reset the collide array and player speed before we determine what to do
   player.speedX = 0;
   player.speedY = 0;
-  enemy1.speedY = 0;
-  enemy2.speedY = 0;
   player.collideArr = [0, 0, 0, 0];
 
   //Redraw and update the map
   map.update();
-
-  //Insert collision detection with enemies here
 
   //Check if the player collided with a boundary
   player.checkBounds();
@@ -899,22 +893,39 @@ function updateGameArea() {
       }
   }
 
-  //Check if the player collided with any objects
-  /*
-    animatedObjects.forEach(function(x)
-    {
-        player.checkCollision(x);
-    }); */
+  //Randomly spawn enemies if applicable
+  if(gameArea.frameNo == 1 || everyinterval(200))
+  {
+      //Generate a random number to determine if we spawn from the left or right side
+      var rand1 = getRandomInt(1, 10);
+      
+      //5 or less we spawn from the left
+      if(rand1 <= 5)
+      {
+          //Generate a random number to determine initial Y coordinate
+          var rand2 = getRandomInt(20, 30);
+          rand2 = rand2 * 8 //Ensures we have a multiple of 8
 
-  /*
-    //Fixes cases where the player walked inside of an object and is locked on all sides
-    if(player.collideArr[0] == 1 && player.collideArr[1] == 1 && player.collideArr[2] == 1 && player.collideArr[3] == 1)
-    {
-        player.collideArr[0] = 0;
-        player.collideArr[1] = 0;
-        player.collideArr[2] = 0;
-        player.collideArr[3] = 0;
-    } */
+          //Create the enemy
+          enemyArr.push(new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R"));
+
+          console.log("Successfully pushed one left side enemy and size of enemyArr is");
+          console.log(enemyArr.length);
+      }
+
+      else if(rand1 > 5)
+      {
+          //Generate a random number to determine initial Y coordinate
+          var rand3 = getRandomInt(40, 60);
+          rand3 = rand3 * 8 //Ensures we have a multiple of 8
+
+          //Create the enemy
+          enemyArr.push(new object(64, 88, "images/enemy_left.png", 1200, rand3, 100, 0, "enemy", "L"));
+
+          console.log("Successfully pushed one right side enemy");
+          console.log(enemyArr.length);
+      }
+  }
 
   //Set Values if the player is trying to move the piece
   if (gameArea.keys && gameArea.keys[37]) {
@@ -1038,14 +1049,6 @@ function updateGameArea() {
     x.update();
   });
 
-  //Enemy stuff here
-  enemySwitch();
-  enemy1.newPos();
-  enemy1.update();
-
-  enemy2.newPos();
-  enemy2.update();
-
   //Update the positions
   player.newPos();
   player.update();
@@ -1054,6 +1057,14 @@ function updateGameArea() {
   projectiles.forEach(projectile => {
     projectile.update();
   });
+
+   //Enemy stuff here
+   enemyAi();
+   enemyArr.forEach(function(x)
+   {
+       x.newPos();
+       x.update();
+   });
 }
 
 //Basic collision detection function for 2 boxes
@@ -1078,6 +1089,54 @@ function enemySwitch() {
     enemy1.image.src = 'images/enemy_right.png';
     enemy2.speedX = 8;
   }
+}
+
+//Handles enemy speed updates
+function enemyAi()
+{
+    //Check if we need to swap the direction of any enemies
+    for(var i=0; i<enemyArr.length; i++)
+    {
+        //If we are within 40 pixels of the right border
+        if(enemyArr[i].x >= (canvasWidth - 16))
+        {
+            //Change image and data value
+            enemyArr[i].src = 'images/enemy_left.png'
+            enemyArr[i].frame = 0;
+            enemyArr[i].data = "L";
+        }
+
+        else if(enemyArr[i].x <= 16)
+        {
+            enemyArr[i].src = 'images/enemy_right.png'
+            enemyArr[i].frame = 0;
+            enemyArr[i].data = "R";
+        }
+
+        //Update the speed values accordingly
+        if(enemyArr[i].data == "R")
+        {
+            enemyArr[i].speedX = 8;
+        }
+
+        else if(enemyArr[i].data == "L")
+        {
+            enemyArr[i].speedX = -8;
+        }
+    }
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive).
+ * The value is no lower than min (or the next integer greater than min
+ * if min isn't an integer) and no greater than max (or the next integer
+ * lower than max if max isn't an integer).
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /* Legacy Start Image Code*/
