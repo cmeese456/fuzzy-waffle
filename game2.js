@@ -12,7 +12,7 @@ var pattern; //Pattern for background
 var enemy1 = new object(
   64,
   88,
-  "images/character_right_large.png",
+  "images/enemy_left.png",
   48,
   144,
   100,
@@ -22,7 +22,7 @@ var enemy1 = new object(
 var enemy2 = new object(
   64,
   88,
-  "images/character_left_large.png",
+  "images/enemy_left.png",
   1200,
   400,
   100,
@@ -31,6 +31,10 @@ var enemy2 = new object(
 );
 let projectiles = [];
 const projectileSpeed = 15;
+var lastFire = 0;
+var enemyArr = [];
+enemyArr.push(enemy1);
+enemyArr.push(enemy2);
 
 //Variables for dynamic height and width, commenting to save but
 //Static window size probably best option
@@ -670,7 +674,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
           this.y < 0
         ) {
           projectiles.splice(i, 1);
-          i--;
+          i--; //We have an issue somewhere here. When one bullet is despawned we lose all bullets fired since space was pressed
         }
       }
     } else if (type == "tree") {
@@ -719,6 +723,14 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.width,
         this.height
       );
+
+      if (everyinterval(10)) {
+        if (this.frame == 3) {
+          this.frame = 0;
+        } else {
+          this.frame = this.frame + 1;
+        }
+      }
     }
   }),
     //Function to handle updating the position of a given object
@@ -816,7 +828,25 @@ function object(width, height, source, x, y, health, frame, type, data) {
       }
 
       return;
-    });
+    }),
+
+    //Function to handle basic bullet and enemy collision
+    (this.checkBullet) = function(obj)
+    {
+        //Setup values
+        var x = this.x;
+        var y = this.y;
+        var r = this.x + this.width;
+        var b = this.y + this.height;
+        var x2 = obj.x;
+        var y2 = obj.y;
+        var r2 = obj.x + obj.width;
+        var b2 = obj.y + obj.height;
+
+        //Check if we collided
+        var result = collides(x, y, r, b, x2, y2, r2, b2);
+        return result;
+    }
 }
 
 //Determines if we are at a specified interval for animation
@@ -840,7 +870,6 @@ function updateGameArea() {
   //Reset the collide array and player speed before we determine what to do
   player.speedX = 0;
   player.speedY = 0;
-  //enemy1.speedX = 8;
   enemy1.speedY = 0;
   enemy2.speedY = 0;
   player.collideArr = [0, 0, 0, 0];
@@ -849,15 +878,26 @@ function updateGameArea() {
   map.update();
 
   //Insert collision detection with enemies here
-  enemySwitch();
-  enemy1.newPos();
-  enemy1.update();
-
-  enemy2.newPos();
-  enemy2.update();
 
   //Check if the player collided with a boundary
   player.checkBounds();
+
+  //Check if any bullets contacted enemies
+  for(var i=0; i < enemyArr.length; i++)
+  {
+      for(var j = 0; j < projectiles.length; j++)
+      {
+          var currentP = projectiles[j];
+          var result = currentP.checkBullet(enemyArr[i]);
+
+          if(result == true)
+          {
+              //Remove the bullet and break because this enemy is gone
+              projectiles.splice(j, 1);
+              break;
+          }
+      }
+  }
 
   //Check if the player collided with any objects
   /*
@@ -909,7 +949,7 @@ function updateGameArea() {
     else player.speedY = 0;
   }
 
-  if (gameArea.keys && gameArea.keys[32]) {
+  if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
     //space
     //console.log("herr");
     switch (direction) {
@@ -929,6 +969,7 @@ function updateGameArea() {
             }
           )
         );
+        lastFire = Date.now();
         break;
       case 1:
         projectiles.push(
@@ -946,6 +987,7 @@ function updateGameArea() {
             }
           )
         );
+        lastFire = Date.now();
         break;
       case 2:
         projectiles.push(
@@ -963,6 +1005,7 @@ function updateGameArea() {
             }
           )
         );
+        lastFire = Date.now();
         break;
       case 3:
         projectiles.push(
@@ -980,6 +1023,7 @@ function updateGameArea() {
             }
           )
         );
+        lastFire = Date.now();
         break;
     }
   }
@@ -994,9 +1038,19 @@ function updateGameArea() {
     x.update();
   });
 
+  //Enemy stuff here
+  enemySwitch();
+  enemy1.newPos();
+  enemy1.update();
+
+  enemy2.newPos();
+  enemy2.update();
+
   //Update the positions
   player.newPos();
   player.update();
+
+  //Update projectile positions
   projectiles.forEach(projectile => {
     projectile.update();
   });
@@ -1010,14 +1064,18 @@ function collides(x, y, r, b, x2, y2, r2, b2) {
 
 function enemySwitch() {
   if (enemy1.x == 1208) {
+    enemy1.image.src = 'images/enemy_left.png';
     enemy1.speedX = -8;
   } else if (enemy1.x == 48) {
+    enemy1.image.src = 'images/enemy_right.png';
     enemy1.speedX = 8;
   }
 
   if (enemy2.x == 1200) {
+    enemy1.image.src = 'images/enemy_left.png';
     enemy2.speedX = -8;
   } else if (enemy2.x == 48) {
+    enemy1.image.src = 'images/enemy_right.png';
     enemy2.speedX = 8;
   }
 }
