@@ -6,8 +6,10 @@ var score; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
-//var startCanvas; //Canvas used for the startgame functionality
-//var startImage; //Image used in the starting screen canvas above
+var startCanvas; //Canvas used for the startgame functionality
+var startImage; //Image used in the starting screen canvas above
+var endCanvas; //Canvas used for the endgame functionality
+var endImage; //Image used in teh end game canvas aboeve
 
 //Variables for dynamic height and width, commenting to save but 
 //Static window size probably best option
@@ -22,6 +24,8 @@ var isOver = false;
 
 /* Legacy Start Image Code*/
 function displayStart() {
+    //If end canvas is on screen, remove
+    $("#endCanvas").remove();
     //create a canvas and append it to the HTML body
     startCanvas = document.createElement("canvas");
     startCanvas.id = "startCanvas";
@@ -31,7 +35,6 @@ function displayStart() {
 
     //logic for switching between background images
     startImage = new Image();
-    var count = 0;
     startImage.src = "images/start-screen.png"
     startImage.addEventListener("load", function () {
         startCanvas.getContext("2d").drawImage(startImage, 0, 0, startCanvas.width, startCanvas.height)
@@ -39,6 +42,30 @@ function displayStart() {
 
     //set its event listener to run startGame function when the user clicks
     $("#startCanvas").on("click", startGame);
+}
+
+/* End Screen Code*/
+function displayEnd() {
+    //remove game canvas
+    $("#gameCanvas").remove();
+    //create a canvas and append it to the HTML body
+    endCanvas = document.createElement("canvas");
+    endCanvas.id = "endCanvas";
+    endCanvas.width = canvasWidth;
+    endCanvas.height = canvasHeight;
+    document.body.appendChild(endCanvas);
+
+    //logic for switching between background images
+    endImage = new Image();
+    endImage.src = "images/lose-screen.png"
+    endImage.addEventListener("load", function () {
+        endCanvas.getContext("2d").drawImage(endImage, 0, 0, endCanvas.width, endCanvas.height)
+    });
+
+    //set its event listener to run startGame function when the user clicks
+    $("#endCanvas").on("click", function(){
+        window.location.reload();
+    });
 }
 
 
@@ -324,11 +351,7 @@ function updateGameArea() {
     //Reset the collide array and player speed before we determine what to do
     player.speedX = 0;
     player.speedY = 0;
-    player.collideArr = [0, 0, 0, 0]
-
-    if (gameArea.frameNo >= 500) {
-        player.health = 0;
-    }
+    player.collideArr = [0, 0, 0, 0];
 
     //Redraw and update the map
     map.update();
@@ -389,39 +412,4 @@ function updateGameArea() {
 function collides(x, y, r, b, x2, y2, r2, b2) {
     return !(r <= x2 || x > r2 ||
         b <= y2 || y > b2);
-}
-
-function displayEnd(){
-    //put stuff here later
-    //remove the main game canvas
-    $("#gameCanvas").remove();
-    //Make a canvas
-    startCanvas = document.createElement("canvas");
-    startCanvas.id = "endCanvas";
-    startCanvas.width = canvasWidth;
-    startCanvas.height = canvasHeight;
-    document.body.insertBefore(startCanvas, document.body.childNodes[0])
-
-    startImage = new Image();
-    startImage.src = "images/lose-screen.png"; //change this to a new end screen picture later
-    startImage.addEventListener("load",function(){
-        startCanvas.getContext("2d").drawImage(startImage,0,0,canvasWidth,canvasHeight);
-    });
-    $("#endCanvas").on("click",function(){
-        restart();
-    });
-}
-
-function restart(){
-
-    startCanvas = document.getElementById("endCanvas");
-    var newCanvas = startCanvas.cloneNode(true);
-    startCanvas.parentNode.replaceChild(newCanvas,startCanvas);
-
-    newCanvas.id = "startCanvas";
-    startImage.src = "images/start-screen.png";
-    startImage.addEventListener("load",function(){
-        newCanvas.getContext("2d").drawImage(startImage,0,0,canvasWidth,canvasHeight);
-    });
-    $("#startCanvas").on("click",startGame());
 }
