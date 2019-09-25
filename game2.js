@@ -1,4 +1,5 @@
 /* Declare Game Variables Gere */
+//lol
 var player; //Player Variable
 var animatedObjects = []; //Array of animated objects
 var staticObjects = []; //Array of static objects
