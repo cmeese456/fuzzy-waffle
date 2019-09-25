@@ -30,7 +30,7 @@ var enemy2 = new object(
   "enemy"
 );
 let projectiles = [];
-const projectileSpeed = 15;
+const projectileSpeed = 25;
 var lastFire = 0;
 var enemyArr = [];
 enemyArr.push(enemy1);
@@ -712,6 +712,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.height
       );
     } else if (type == "enemy") {
+      if(enemyArr.includes(this)) {
       ctx.drawImage(
         this.image,
         this.width * this.frame,
@@ -723,6 +724,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.width,
         this.height
       );
+      }
 
       if (everyinterval(10)) {
         if (this.frame == 3) {
@@ -894,6 +896,10 @@ function updateGameArea() {
           {
               //Remove the bullet and break because this enemy is gone
               projectiles.splice(j, 1);
+              enemyArr[i].health -= 20;
+              if(enemyArr[i].health <= 0) {
+                enemyArr.splice(i, 1);
+              }
               break;
           }
       }
