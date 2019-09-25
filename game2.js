@@ -1091,14 +1091,14 @@ function enemyAi()
         if(enemyArr[i].x >= (canvasWidth - 16))
         {
             //Change image and data value
-            //enemyArr[i].src = 'images/enemy_left.png'
+            enemyArr[i].image.src = 'images/enemy_left.png'
             enemyArr[i].frame = 0;
             enemyArr[i].data = "L";
         }
 
         else if(enemyArr[i].x <= 16)
         {
-            //enemyArr[i].src = 'images/enemy_right.png'
+            enemyArr[i].image.src = 'images/enemy_right.png'
             enemyArr[i].frame = 0;
             enemyArr[i].data = "R";
         }
