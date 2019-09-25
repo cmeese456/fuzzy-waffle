@@ -1,7 +1,7 @@
 /* Declare Game Variables Gere */
 var player; //Player Variable
 var enemies = []; //Array of enemies
-var staticObjects  = []; //Array of static objects
+var staticObjects = []; //Array of static objects
 var score; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
@@ -18,10 +18,34 @@ var pattern; //Pattern for background
 var canvasHeight = 720;
 var canvasWidth = 1280;
 
+var isOver = false;
+
+/* Legacy Start Image Code*/
+function displayStart() {
+    //create a canvas and append it to the HTML body
+    startCanvas = document.createElement("canvas");
+    startCanvas.id = "startCanvas";
+    startCanvas.width = canvasWidth;
+    startCanvas.height = canvasHeight;
+    document.body.appendChild(startCanvas);
+
+    //logic for switching between background images
+    startImage = new Image();
+    var count = 0;
+    startImage.src = "images/start-screen.png"
+    startImage.addEventListener("load", function () {
+        startCanvas.getContext("2d").drawImage(startImage, 0, 0, startCanvas.width, startCanvas.height)
+    });
+
+    //set its event listener to run startGame function when the user clicks
+    $("#startCanvas").on("click", startGame);
+}
+
+
 /* This function handles starting the game by initializing players, objects and enemies
     As well as setting up the map */
-function startGame()
-{
+function startGame() {
+    $("#startCanvas").remove();
     //Create the player here
     player = new object(64, 88, "images/character_up_large.png", 0, 0, 100, 0, "player");
 
@@ -47,7 +71,7 @@ function startGame()
     //May want to load all images here but for now the player image is having no issues with loads
     backgroundImage = new Image();
     backgroundImage.src = "images/background_tile.png";
-    backgroundImage.onload = function(){
+    backgroundImage.onload = function () {
         gameArea.start();
     };
 }
@@ -55,19 +79,19 @@ function startGame()
 /* gameArea variable which initializes the canvas, sets up and draws the initial background
    and adds listeners for keys
 */
-var gameArea = 
+var gameArea =
 {
     //Create the canvas
     canvas: document.createElement("canvas"),
 
     //Start method
-    start: function() 
-    {
+    start: function () {
         //Initialize the size of the window
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
         this.context = this.canvas.getContext('2d');
         this.frameNo = 0; //Counts frames
+        this.canvas.id = "gameCanvas";
         document.body.insertBefore(this.canvas, document.body.childNodes[0]); //Inserts at front
 
         //Setup the initial background and fill it
@@ -85,36 +109,36 @@ var gameArea =
 
         //Add event listeners for keystrokes
         //Handles Keydown
-        window.addEventListener("keydown", function(e) {
+        window.addEventListener("keydown", function (e) {
             gameArea.keys = gameArea.keys || [];
             gameArea.keys[e.keyCode] = e.type == "keydown";
             e.preventDefault();
         });
 
         //Handles keyup
-        window.addEventListener("keyup", function(e) {
+        window.addEventListener("keyup", function (e) {
             gameArea.keys[e.keyCode] = e.type == "keydown";
         });
     },
 
     //Clears the entire canvas so we can redraw new positions
-    clear: function() {
+    clear: function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-     },
+    },
 
     //Function to stop the game when a player dies
     //Needs modification
-    stop: function() {
-        map.image.src = "lose.png";
-        map.newPos();
-        map.update();
+    stop: function () {
+        //map.source.src = "lose.png";
+        //map.newPos();
+        //map.update();
         clearInterval(this.interval);
+        displayEnd();
     }
 };
 
 /* Function to create game objects. Not all fields need to be used for every object */
-function object(width, height, source, x, y, health, frame, type)
-{
+function object(width, height, source, x, y, health, frame, type) {
     //Initialize with passed in values
     this.width = width;
     this.height = height;
@@ -127,28 +151,28 @@ function object(width, height, source, x, y, health, frame, type)
 
     //Set some additional parameters for the object
     this.collideArr = [0, 0, 0, 0]; //Handles collision
-    
+
     //This initializes the image for the created object
     //However we initialize background before we start the game
-    if(type != 'background')
-    {
+    if (type != 'background') {
         this.image = new Image(); //Creates an image object
         this.image.src = source; //Sets the source to point to our image file location
     }
 
     //Update function to handle updating the position of objects
-    (this.update = function() 
-    {
+    (this.update = function () {
         //Grab the current context
         ctx = gameArea.context;
 
         //Handle player movement
-        if(type == 'player')
-        {
+        if (type == 'player') {
             //Stop animating if the player is not moving
-            if(this.speedX == 0 && this.speedY == 0)
-            {
+            if (this.speedX == 0 && this.speedY == 0) {
                 this.frame = 0;
+            }
+
+            if (this.health == 0) {
+                isOver = true;
             }
 
             //Draw the player object using drawImage
@@ -157,153 +181,140 @@ function object(width, height, source, x, y, health, frame, type)
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update the frame if we are at a 10th interation
-            if(everyinterval(10))
-            {
-                if(this.frame == 3)
-                {
+            if (everyinterval(10)) {
+                if (this.frame == 3) {
                     this.frame = 0;
                 }
 
-                else
-                {
+                else {
                     this.frame = this.frame + 1;
                 }
             }
         }
 
         //Handle drawing the background
-        else if(type == 'background')
-        {
+        else if (type == 'background') {
             //Set the fill style to be the pattern we established before game launch
             //Then use it to fill the canvas with a rectangle
             ctx.fillStyle = pattern;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
 
-        else if(type == 'staticAnimated')
-        {
+        else if (type == 'staticAnimated') {
             //Draw the image
             ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update animation frame if needed
-            if(everyinterval(5))
-            {
-                if(this.frame == 2)
-                {
+            if (everyinterval(5)) {
+                if (this.frame == 2) {
                     this.frame = 0;
                 }
 
-                else
-                {
+                else {
                     this.frame = this.frame + 1;
                 }
             }
         }
+        if (isOver) {
+            gameArea.stop();
+        }
     }),
 
-    //Function to handle updating the position of a given object
-    (this.newPos = function()
-    {
-        //Update the coordinates based on speed
-        this.x += this.speedX;
-        this.y += this.speedY;
-    }),
+        //Function to handle updating the position of a given object
+        (this.newPos = function () {
+            //Update the coordinates based on speed
+            this.x += this.speedX;
+            this.y += this.speedY;
+        }),
 
-    //Function to handle collision detection between an object and other objects
-    (this.checkCollision = function(otherobj)
-    {
-        //Grab the necessary coordinate data from both objects
-        var x = this.x;
-        var y = this.y;
-        var r = this.x + this.width;
-        var b = r + this.height;
-        var x2 = otherobj.x;
-        var y2 = otherobj.y;
-        var r2 = otherobj.x + otherobj.width;
-        var b2 = r2 + otherobj.height;
+        //Function to handle collision detection between an object and other objects
+        (this.checkCollision = function (otherobj) {
+            //Grab the necessary coordinate data from both objects
+            var x = this.x;
+            var y = this.y;
+            var r = this.x + this.width;
+            var b = r + this.height;
+            var x2 = otherobj.x;
+            var y2 = otherobj.y;
+            var r2 = otherobj.x + otherobj.width;
+            var b2 = r2 + otherobj.height;
 
-        if(r > x2)
-        {
-            this.collideArr[2] = 1;
-        }
+            if (r > x2) {
+                this.collideArr[2] = 1;
+            }
 
-        else if(x <= r2)
-        {
-            this.collideArr[3] = 1;
-        }
+            else if (x <= r2) {
+                this.collideArr[3] = 1;
+            }
 
-        else if (b > y2)
-        {
-            this.collideArr[1] = 1;
-        }
+            else if (b > y2) {
+                this.collideArr[1] = 1;
+            }
 
-        else if(y <= b2)
-        {
-            this.collideArr[0] = 1;
-        }
+            else if (y <= b2) {
+                this.collideArr[0] = 1;
+            }
 
-        //Run the collision detection
-        /*
-        if(collides(x, y, r, b, x2, y2, r2, b2))
-        {
-            return true;
-        }
+            //Run the collision detection
+            /*
+            if(collides(x, y, r, b, x2, y2, r2, b2))
+            {
+                return true;
+            }
+    
+            else
+            {
+               return false;
+            } */
+        }),
 
-        else
-        {
-           return false;
-        } */
-    }),
+        //Function to check if an object is at the boundaries of the screen
+        (this.checkBounds = function () {
+            //Grab the coordinates of the player object
+            var myleft = this.x;
+            var myright = this.x + this.width;
+            var mytop = this.y;
+            var mybottom = this.y + this.height;
+            var maxHeight = gameArea.canvas.height;
+            var maxWidth = gameArea.canvas.width;
 
-    //Function to check if an object is at the boundaries of the screen
-    (this.checkBounds = function()
-    {
-        //Grab the coordinates of the player object
-        var myleft = this.x;
-        var myright = this.x + this.width;
-        var mytop = this.y;
-        var mybottom = this.y + this.height;
-        var maxHeight = gameArea.canvas.height;
-        var maxWidth = gameArea.canvas.width;
+            //Check collision with all 4 boundaries
+            if (mybottom == maxHeight) //Handles Bottom
+            {
+                this.collideArr[0] = 1;
+            }
 
-        //Check collision with all 4 boundaries
-        if (mybottom == maxHeight) //Handles Bottom
-        {
-            this.collideArr[0] = 1;
-        }
+            if (mytop == 0) //Handles Top
+            {
+                this.collideArr[1] = 1;
+            }
 
-        if (mytop  == 0) //Handles Top
-        {
-            this.collideArr[1] = 1;
-        }
+            if (myright == maxWidth) //Handles Right
+            {
+                this.collideArr[2] = 1;
+            }
 
-        if(myright == maxWidth) //Handles Right
-        {
-            this.collideArr[2] = 1;
-        }
+            if (myleft == 0) //Handles Left
+            {
+                this.collideArr[3] = 1;
+            }
 
-        if(myleft == 0) //Handles Left
-        {
-            this.collideArr[3] = 1;
-        }
-
-        return;
-    });
+            return;
+        });
 }
 
 //Determines if we are at a specified interval for animation
 function everyinterval(n) {
     // Mod 1 returns anything after the decimal
     if ((gameArea.frameNo / n) % 1 == 0) {
-      return true;
+        return true;
     } else {
-      return false;
+        return false;
     }
-  }
+}
 
 /*Function to handle updating the game area every frame to "animate" our canvas*/
-function updateGameArea()
-{
+function updateGameArea() {
     //Clear the game area so we can update it
     gameArea.clear();
 
@@ -314,6 +325,10 @@ function updateGameArea()
     player.speedX = 0;
     player.speedY = 0;
     player.collideArr = [0, 0, 0, 0]
+
+    if (gameArea.frameNo >= 500) {
+        player.health = 0;
+    }
 
     //Redraw and update the map
     map.update();
@@ -360,7 +375,7 @@ function updateGameArea()
     }
 
     //Redraw static objects
-    staticObjects.forEach(function(x){
+    staticObjects.forEach(function (x) {
         x.update();
     });
 
@@ -373,26 +388,40 @@ function updateGameArea()
 //Only works for polygons
 function collides(x, y, r, b, x2, y2, r2, b2) {
     return !(r <= x2 || x > r2 ||
-             b <= y2 || y > b2);
+        b <= y2 || y > b2);
 }
 
-/* Legacy Start Image Code*/
-/*$(function(){
-    //create a canvas and append it to the HTML body
+function displayEnd(){
+    //put stuff here later
+    //remove the main game canvas
+    $("#gameCanvas").remove();
+    //Make a canvas
     startCanvas = document.createElement("canvas");
-    startCanvas.id = "startCanvas";
+    startCanvas.id = "endCanvas";
     startCanvas.width = canvasWidth;
-    startCanvas.height  = canvasHeight;
-    document.body.appendChild(startCanvas);
-  
-    //logic for switching between background images
+    startCanvas.height = canvasHeight;
+    document.body.insertBefore(startCanvas, document.body.childNodes[0])
+
     startImage = new Image();
-    var count = 0;
-    startImage.src = "images/start-screen.png"
-    startImage.addEventListener('load',function(){
-      startCanvas.getContext("2d").drawImage(startImage,0,0,startCanvas.width,startCanvas.height)
+    startImage.src = "images/lose-screen.png"; //change this to a new end screen picture later
+    startImage.addEventListener("load",function(){
+        startCanvas.getContext("2d").drawImage(startImage,0,0,canvasWidth,canvasHeight);
     });
-  
-    //set its event listener to run startGame function when the user clicks
-    $('#startCanvas').on("click", startGame);
-}); */
+    $("#endCanvas").on("click",function(){
+        restart();
+    });
+}
+
+function restart(){
+
+    startCanvas = document.getElementById("endCanvas");
+    var newCanvas = startCanvas.cloneNode(true);
+    startCanvas.parentNode.replaceChild(newCanvas,startCanvas);
+
+    newCanvas.id = "startCanvas";
+    startImage.src = "images/start-screen.png";
+    startImage.addEventListener("load",function(){
+        newCanvas.getContext("2d").drawImage(startImage,0,0,canvasWidth,canvasHeight);
+    });
+    $("#startCanvas").on("click",startGame());
+}
