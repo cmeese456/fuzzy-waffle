@@ -46,6 +46,13 @@ const canvasWidth = 1280;
 
 let direction;
 
+var enemy_right = new Image();
+enemy_right.source = "images/enemy_right.png";
+
+var enemy_left = new Image();
+enemy_left.source = "images/enemy_left.png";
+
+
 /* This function handles starting the game by initializing players, objects and enemies
     As well as setting up the map */
 function startGame() {
@@ -471,6 +478,8 @@ function startGame() {
   staticObjects.push(doghouse);
 
   //Create enemies here
+  var enemy1 = new object(64, 88, "images/enemy_right.png", 48, 240, 100, 0, "enemy", "R");
+  enemyArr.push(enemy1);
   //check top
   //Initialize Score
   //score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
@@ -907,7 +916,8 @@ function updateGameArea() {
           rand2 = rand2 * 8 //Ensures we have a multiple of 8
 
           //Create the enemy
-          enemyArr.push(new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R"));
+          var newEnemy = new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R");
+          enemyArr.push(newEnemy);
 
           console.log("Successfully pushed one left side enemy and size of enemyArr is");
           console.log(enemyArr.length);
@@ -920,7 +930,8 @@ function updateGameArea() {
           rand3 = rand3 * 8 //Ensures we have a multiple of 8
 
           //Create the enemy
-          enemyArr.push(new object(64, 88, "images/enemy_left.png", 1200, rand3, 100, 0, "enemy", "L"));
+          var newEnemy2 = new object(64, 88, "images/enemy_left.png", 1200, rand3, 100, 0, "enemy", "L");
+          enemyArr.push(newEnemy2);
 
           console.log("Successfully pushed one right side enemy");
           console.log(enemyArr.length);
@@ -1060,11 +1071,11 @@ function updateGameArea() {
 
    //Enemy stuff here
    enemyAi();
-   enemyArr.forEach(function(x)
+   for(var i = 0; i < enemyArr.length; i++)
    {
-       x.newPos();
-       x.update();
-   });
+     enemyArr[i].newPos();
+     enemyArr[i].update();
+   }
 }
 
 //Basic collision detection function for 2 boxes
@@ -1138,6 +1149,7 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 
 /* Legacy Start Image Code*/
 /*$(function(){
