@@ -478,8 +478,8 @@ function startGame() {
   staticObjects.push(doghouse);
 
   //Create enemies here
-  var enemy1 = new object(64, 88, "images/enemy_right.png", 48, 240, 100, 0, "enemy", "R");
-  enemyArr.push(enemy1);
+  //var enemy1 = new object(64, 88, "images/enemy_right.png", 48, 240, 100, 0, "enemy", "R");
+  //enemyArr.push(enemy1);
   //check top
   //Initialize Score
   //score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
@@ -718,27 +718,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.width,
         this.height
       );
-    } else if (type == "enemy") {
-        ctx.drawImage(
-            this.image,
-            this.width * this.frame,
-            0,
-            this.width,
-            this.height,
-            this.x,
-            this.y,
-            this.width,
-            this.height
-          );
-          //Update the frame if we are at a 10th interation
-          if (everyinterval(10)) {
-            if (this.frame == 3) {
-              this.frame = 0;
-            } else {
-              this.frame = this.frame + 1;
-            }
-          };
-    }
+    } 
   }),
     //Function to handle updating the position of a given object
     (this.newPos = function() {
@@ -912,9 +892,8 @@ function updateGameArea() {
       if(rand1 <= 5)
       {
           //Generate a random number to determine initial Y coordinate
-          var rand2 = getRandomInt(20, 30);
+          let rand2 = getRandomInt(20, 30);
           rand2 = rand2 * 8 //Ensures we have a multiple of 8
-
           //Create the enemy
           var newEnemy = new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R");
           enemyArr.push(newEnemy);
@@ -928,7 +907,6 @@ function updateGameArea() {
           //Generate a random number to determine initial Y coordinate
           var rand3 = getRandomInt(40, 60);
           rand3 = rand3 * 8 //Ensures we have a multiple of 8
-
           //Create the enemy
           var newEnemy2 = new object(64, 88, "images/enemy_left.png", 1200, rand3, 100, 0, "enemy", "L");
           enemyArr.push(newEnemy2);
@@ -973,7 +951,7 @@ function updateGameArea() {
 
   if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
     //space
-    //console.log("herr");
+    console.log("herr");
     switch (direction) {
       case 0:
         projectiles.push(
@@ -1073,8 +1051,9 @@ function updateGameArea() {
    enemyAi();
    for(var i = 0; i < enemyArr.length; i++)
    {
-     enemyArr[i].newPos();
-     enemyArr[i].update();
+     enemyNewPos(i);
+     //console.log(enemyArr[i].x);
+     enemyUpdate(i);
    }
 }
 
@@ -1112,14 +1091,14 @@ function enemyAi()
         if(enemyArr[i].x >= (canvasWidth - 16))
         {
             //Change image and data value
-            enemyArr[i].src = 'images/enemy_left.png'
+            //enemyArr[i].src = 'images/enemy_left.png'
             enemyArr[i].frame = 0;
             enemyArr[i].data = "L";
         }
 
         else if(enemyArr[i].x <= 16)
         {
-            enemyArr[i].src = 'images/enemy_right.png'
+            //enemyArr[i].src = 'images/enemy_right.png'
             enemyArr[i].frame = 0;
             enemyArr[i].data = "R";
         }
@@ -1128,11 +1107,13 @@ function enemyAi()
         if(enemyArr[i].data == "R")
         {
             enemyArr[i].speedX = 8;
+            enemyArr[i].speedY = 0;
         }
 
         else if(enemyArr[i].data == "L")
         {
             enemyArr[i].speedX = -8;
+            enemyArr[i].speedY = 0;
         }
     }
 }
@@ -1171,3 +1152,35 @@ function getRandomInt(min, max) {
     //set its event listener to run startGame function when the user clicks
     $('#startCanvas').on("click", startGame);
 }); */
+
+function enemyNewPos(i)
+{
+    enemyArr[i].x += enemyArr[i].speedX;
+    enemyArr[i].y += enemyArr[i].speedY;
+}
+
+function enemyUpdate(i)
+{
+    ctx = gameArea.context;
+    ctx.drawImage(
+        enemyArr[i].image,
+        enemyArr[i].width * enemyArr[i].frame,
+        0,
+        enemyArr[i].width,
+        enemyArr[i].height,
+        enemyArr[i].x,
+        enemyArr[i].y,
+        enemyArr[i].width,
+        enemyArr[i].height
+      );
+        
+      //Update the frame if we are at a 10th interation
+      if (everyinterval(10)) 
+      {
+        if (enemyArr[i].frame == 3) {
+            enemyArr[i].frame = 0;
+        } else {
+            enemyArr[i].frame = enemyArr[i].frame + 1;
+        }
+      }
+}
