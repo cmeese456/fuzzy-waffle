@@ -634,7 +634,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
     //Handle player movement
     if (type == "player") {
       //Stop animating if the player is not moving
-      if (this.speedX == 0 && this.speedY == 0) {
+      if (this.speedX == 0 && this.speedY == 0 && !(gameArea.keys && gameArea.keys[32])) {
         this.frame = 0;
       }
       
@@ -998,7 +998,7 @@ function updateGameArea() {
   if (gameArea.keys && gameArea.keys[37]) {
     //Left
     direction = 0;
-    player.image.src = "images/character_left_large.png";
+    if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_left_large.png";}
     if (player.collideArr[3] == 0) player.speedX = -8;
     else player.speedX = 0;
   }
@@ -1006,7 +1006,7 @@ function updateGameArea() {
   if (gameArea.keys && gameArea.keys[39]) {
     //Right
     direction = 1;
-    player.image.src = "images/character_right_large.png";
+    if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_right_large.png";}
     if (player.collideArr[2] == 0) player.speedX = 8;
     else player.speedX = 0;
   }
@@ -1014,7 +1014,7 @@ function updateGameArea() {
   if (gameArea.keys && gameArea.keys[38]) {
     //Up
     direction = 2;
-    player.image.src = "images/character_up_large.png";
+    if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_up_large.png";}
     if (player.collideArr[1] == 0) player.speedY = -8;
     else player.speedY = 0;
   }
@@ -1022,7 +1022,8 @@ function updateGameArea() {
   if (gameArea.keys && gameArea.keys[40]) {
     //Down
     direction = 3;
-    player.image.src = "images/character_down_large.png";
+    //Don't change the image if the character is firing
+    if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_down_large.png";}
     if (player.collideArr[0] == 0) player.speedY = 8;
     else player.speedY = 0;
   }
@@ -1048,6 +1049,7 @@ function updateGameArea() {
           )
         );
         lastFire = Date.now();
+        player.image.src = "images/sword_left.png";
         break;
       case 1:
         projectiles.push(
@@ -1066,6 +1068,7 @@ function updateGameArea() {
           )
         );
         lastFire = Date.now();
+        player.image.src = "images/sword_right.png";
         break;
       case 2:
         projectiles.push(
@@ -1084,6 +1087,7 @@ function updateGameArea() {
           )
         );
         lastFire = Date.now();
+        player.image.src = "images/sword_up.png";
         break;
       case 3:
         projectiles.push(
@@ -1102,6 +1106,7 @@ function updateGameArea() {
           )
         );
         lastFire = Date.now();
+        player.image.src = "images/sword_down.png";
         break;
     }
   }
