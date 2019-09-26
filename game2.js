@@ -3,7 +3,8 @@
 var player; //Player Variable
 var animatedObjects = []; //Array of animated objects
 var staticObjects = []; //Array of static objects
-var score; //Tracks the score
+var scoreObject; //Object to draw score
+var score = 0; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
@@ -526,6 +527,8 @@ function startGame() {
   staticObjects.push(trapdoor);
   staticObjects.push(doghouse);
 
+  scoreObject = new object("30px", "Consolas", "black", canvasWidth / 2, canvasHeight / 10, 0, 0, "score", "Score: 0");
+
   //Create enemies here
   //var enemy1 = new object(64, 88, "images/enemy_right.png", 48, 240, 100, 0, "enemy", "R");
   //enemyArr.push(enemy1);
@@ -621,7 +624,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
   //This initializes the image for the created object
   //However we initialize background before we start the game
-  if (type != "background") {
+  if (type != "background" && type != "score") {
     this.image = new Image(); //Creates an image object
     this.image.src = source; //Sets the source to point to our image file location
   }
@@ -802,7 +805,15 @@ function object(width, height, source, x, y, health, frame, type, data) {
         } else {
           this.frame = this.frame + 1;
         }
+      } 
+    } else if(this.type == "score") {
+      if(everyinterval(100)){
+        score++;
       }
+      this.data = "Score: " + score.toString();
+      ctx.font = this.width + " " + this.height;
+      ctx.fillStyle = this.source;
+      ctx.fillText(this.data, this.x, this.y);
     }
   }),
     //Function to handle updating the position of a given object
@@ -935,7 +946,7 @@ function everyinterval(n) {
 function updateGameArea() {
   //Clear the game area so we can update it
   gameArea.clear();
-
+  
   //Increment frame rate
   gameArea.frameNo += 1;
 
@@ -1149,6 +1160,7 @@ function updateGameArea() {
      //console.log(enemyArr[i].x);
      enemyUpdate(i);
    }
+   scoreObject.update();
 }
 
 //Basic collision detection function for 2 boxes
