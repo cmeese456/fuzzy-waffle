@@ -175,7 +175,7 @@ function startGame() {
     94,
     "images/fountain3.png",
     600,
-    240,
+    280,
     0,
     0,
     "fountain"
@@ -232,7 +232,7 @@ function startGame() {
     64,
     "images/trees_final.png",
     536,
-    280,
+    320,
     0,
     0,
     "tree"
@@ -242,7 +242,7 @@ function startGame() {
     64,
     "images/trees_final.png",
     536,
-    224,
+    264,
     0,
     0,
     "tree"
@@ -252,7 +252,7 @@ function startGame() {
     64,
     "images/trees_final.png",
     696,
-    224,
+    264,
     0,
     0,
     "tree"
@@ -262,7 +262,7 @@ function startGame() {
     64,
     "images/trees_final.png",
     696,
-    280,
+    320,
     0,
     0,
     "tree"
@@ -981,7 +981,7 @@ function updateGameArea() {
       if(rand1 <= 5)
       {
           //Generate a random number to determine initial Y coordinate
-          let rand2 = getRandomInt(20, 30);
+          let rand2 = getRandomInt(15, 22);
           rand2 = rand2 * 8 //Ensures we have a multiple of 8
           //Create the enemy
           var newEnemy = new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R");
