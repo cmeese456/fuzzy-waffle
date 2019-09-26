@@ -555,6 +555,7 @@ var gameArea = {
     this.canvas.width = canvasWidth;
     this.canvas.height = canvasHeight;
     this.context = this.canvas.getContext("2d");
+    this.canvas.id = "gameCanvas";
     this.frameNo = 0; //Counts frames
     document.body.insertBefore(this.canvas, document.body.childNodes[0]); //Inserts at front
 
@@ -1028,7 +1029,6 @@ function updateGameArea() {
 
   if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
     //space
-    gameArea.stop();
     console.log("herr");
     switch (direction) {
       case 0:
