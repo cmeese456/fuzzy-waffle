@@ -707,8 +707,19 @@ function object(width, height, source, x, y, health, frame, type, data) {
       let c = gameArea.canvas;
       let ctx = c.getContext("2d");
       ctx.beginPath();
-      ctx.rect(this.x, this.y, 5, 5);
-      ctx.stroke();
+      //ctx.rect(this.x, this.y, 5, 5);
+      //ctx.stroke();
+      ctx.drawImage(
+        this.image,
+        this.width * this.frame,
+        0,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
       switch (this.data["direction"]) {
         case 0:
           this.x -= projectileSpeed;
@@ -1035,9 +1046,9 @@ function updateGameArea() {
       case 0:
         projectiles.push(
           new object(
-            5,
-            5,
-            "",
+            16,
+            16,
+            "images/beam_left.png",
             player.x,
             player.y + player.height / 2,
             0,
@@ -1054,9 +1065,9 @@ function updateGameArea() {
       case 1:
         projectiles.push(
           new object(
-            5,
-            5,
-            "",
+            16,
+            16,
+            "images/beam_right.png",
             player.width + player.x,
             player.y + player.height / 2,
             0,
@@ -1073,9 +1084,9 @@ function updateGameArea() {
       case 2:
         projectiles.push(
           new object(
-            5,
-            5,
-            "",
+            16,
+            16,
+            "images/beam_up.png",
             player.x + player.width / 2,
             player.y,
             0,
@@ -1092,9 +1103,9 @@ function updateGameArea() {
       case 3:
         projectiles.push(
           new object(
-            5,
-            5,
-            "",
+            16,
+            16,
+            "images/beam_down.png",
             player.x + player.width / 2,
             player.y + player.height,
             0,
