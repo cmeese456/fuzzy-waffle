@@ -7,9 +7,28 @@ var score; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
-//var startCanvas; //Canvas used for the startgame functionality
-//var startImage; //Image used in the starting screen canvas above
-
+var startCanvas; //Canvas used for the startgame functionality
+var startImage; //Image used in the starting screen canvas above
+/*var enemy1 = new object(
+  64,
+  88,
+  "images/enemy_left.png",
+  48,
+  144,
+  100,
+  0,
+  "enemy"
+);
+var enemy2 = new object(
+  64,
+  88,
+  "images/enemy_left.png",
+  1200,
+  400,
+  100,
+  0,
+  "enemy"
+);*/
 let projectiles = [];
 const projectileSpeed = 25;
 var lastFire = 0;
@@ -26,6 +45,53 @@ var enemyArr = [];
 const canvasHeight = 720;
 const canvasWidth = 1280;
 
+//variable for whether game has ended
+var isOver = false;
+
+/* Start Screen Code*/
+$(function displayStart() {
+  //create a canvas and append it to the HTML body
+  startCanvas = document.createElement("canvas");
+  startCanvas.id = "startCanvas";
+  startCanvas.width = canvasWidth;
+  startCanvas.height = canvasHeight;
+  document.body.appendChild(startCanvas);
+
+  //logic for switching between background images
+  startImage = new Image();
+  startImage.src = "images/start-screen.png"
+  startImage.addEventListener("load", function () {
+      startCanvas.getContext("2d").drawImage(startImage, 0, 0, startCanvas.width, startCanvas.height)
+  });
+
+  //set its event listener to run startGame function when the user clicks
+  $("#startCanvas").on("click", startGame);
+});
+
+/* End Screen Code*/
+function displayEnd() {
+  //remove game canvas
+  $("#gameCanvas").remove();
+  //create a canvas and append it to the HTML body
+  endCanvas = document.createElement("canvas");
+  endCanvas.id = "endCanvas";
+  endCanvas.width = canvasWidth;
+  endCanvas.height = canvasHeight;
+  document.body.appendChild(endCanvas);
+
+  //logic for switching between background images
+  endImage = new Image();
+  endImage.src = "images/lose-screen.png"
+  endImage.addEventListener("load", function () {
+      endCanvas.getContext("2d").drawImage(endImage, 0, 0, endCanvas.width, endCanvas.height)
+  });
+
+  //set its event listener to run startGame function when the user clicks
+  $("#endCanvas").on("click", function () {
+      window.location.reload();
+  });
+}
+
 let direction;
 
 var enemy_right = new Image();
@@ -38,6 +104,7 @@ enemy_left.source = "images/enemy_left.png";
 /* This function handles starting the game by initializing players, objects and enemies
     As well as setting up the map */
 function startGame() {
+  $("#startCanvas").remove();
   //Create the player here
   player = new object(
     64,
@@ -488,6 +555,7 @@ var gameArea = {
     this.canvas.width = canvasWidth;
     this.canvas.height = canvasHeight;
     this.context = this.canvas.getContext("2d");
+    this.canvas.id = "gameCanvas";
     this.frameNo = 0; //Counts frames
     document.body.insertBefore(this.canvas, document.body.childNodes[0]); //Inserts at front
 
@@ -526,10 +594,11 @@ var gameArea = {
   //Function to stop the game when a player dies
   //Needs modification
   stop: function() {
-    map.image.src = "lose.png";
-    map.newPos();
-    map.update();
+    //map.image.src = "lose.png";
+    //map.newPos();
+    //map.update();
     clearInterval(this.interval);
+    displayEnd();
   }
 };
 
