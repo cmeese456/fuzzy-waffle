@@ -7,8 +7,8 @@ var score; //Tracks the score
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
-//var startCanvas; //Canvas used for the startgame functionality
-//var startImage; //Image used in the starting screen canvas above
+var startCanvas; //Canvas used for the startgame functionality
+var startImage; //Image used in the starting screen canvas above
 /*var enemy1 = new object(
   64,
   88,
