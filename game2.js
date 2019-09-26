@@ -9,26 +9,7 @@ var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
 //var startCanvas; //Canvas used for the startgame functionality
 //var startImage; //Image used in the starting screen canvas above
-/*var enemy1 = new object(
-  64,
-  88,
-  "images/enemy_left.png",
-  48,
-  144,
-  100,
-  0,
-  "enemy"
-);
-var enemy2 = new object(
-  64,
-  88,
-  "images/enemy_left.png",
-  1200,
-  400,
-  100,
-  0,
-  "enemy"
-);*/
+
 let projectiles = [];
 const projectileSpeed = 25;
 var lastFire = 0;
