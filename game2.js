@@ -10,6 +10,7 @@ var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
 var startCanvas; //Canvas used for the startgame functionality
 var startImage; //Image used in the starting screen canvas above
+var heartArr = [];
 /*var enemy1 = new object(
   64,
   88,
@@ -527,14 +528,20 @@ function startGame() {
   staticObjects.push(trapdoor);
   staticObjects.push(doghouse);
 
-  scoreObject = new object("30px", "Consolas", "black", canvasWidth / 2, canvasHeight / 10, 0, 0, "score", "Score: 0");
+  //Create Score Object
+  scoreObject = new object("30px", "Consolas", "black", canvasWidth / 2, 60, 0, 0, "score", "Score: 0");
 
-  //Create enemies here
-  //var enemy1 = new object(64, 88, "images/enemy_right.png", 48, 240, 100, 0, "enemy", "R");
-  //enemyArr.push(enemy1);
-  //check top
-  //Initialize Score
-  //score = new gameObject("30px", "Consolas", "black", 1000, 40, "text");
+  //Create hearts
+  heart1 = new object(46, 32, "images/hearts.png", 320, 32, 0, 0, "heart");
+  heart2 = new object(46, 32, "images/hearts.png", 320+60, 32, 0, 0, "heart");
+  heart3 = new object(46, 32, "images/hearts.png", 320+120, 32, 0, 0, "heart");
+  heart4 = new object(46, 32, "images/hearts.png", 320+180, 32, 0, 0, "heart");
+  heart5 = new object(46, 32, "images/hearts.png", 320+240, 32, 0, 0, "heart");
+  heartArr.push(heart1);
+  heartArr.push(heart2);
+  heartArr.push(heart3);
+  heartArr.push(heart4);
+  heartArr.push(heart5);
 
   //Load background image
   //May want to load all images here but for now the player image is having no issues with loads
@@ -807,13 +814,37 @@ function object(width, height, source, x, y, health, frame, type, data) {
         }
       } 
     } else if(this.type == "score") {
-      if(everyinterval(100)){
+      if(everyinterval(1)){ //Changed this to make score feel more meaningful
         score++;
       }
       this.data = "Score: " + score.toString();
       ctx.font = this.width + " " + this.height;
       ctx.fillStyle = this.source;
       ctx.fillText(this.data, this.x, this.y);
+    }
+
+    else if(this.type == "heart")
+    {
+      //Draw the heart
+      ctx.drawImage(
+        this.image,
+        this.width * this.frame,
+        0,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+
+      if (everyinterval(50)) {
+        if (this.frame == 4) {
+          this.frame = 0;
+        } else {
+          this.frame = this.frame + 1;
+        }
+      }
     }
   }),
     //Function to handle updating the position of a given object
@@ -1160,6 +1191,12 @@ function updateGameArea() {
      //console.log(enemyArr[i].x);
      enemyUpdate(i);
    }
+
+   heartArr.forEach(function(x)
+   {
+     x.update();
+   });
+
    scoreObject.update();
 }
 
