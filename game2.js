@@ -1238,6 +1238,10 @@ function updateGameArea() {
    });
 
    scoreObject.update();
+
+   if(isOver){
+     gameArea.stop();
+   }
    
 }
 
