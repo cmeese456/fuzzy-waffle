@@ -884,7 +884,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
     (this.checkCollision = function(otherobj) {
       //Check Left
       //If the left side of this object is inside or touching another object
-      if (this.x <= otherobj.x + otherobj.width) {
+      if ((this.x <= otherobj.x + otherobj.width) && (this.x >=  otherobj.x + otherobj.width-8)) {
         //If the other object is within the same verticle plane as this object
         //OR if this object is within the same verticle plane as the other object
         if (
@@ -898,7 +898,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
       //Check Right
       //If the right side of this object is inside or touching another object
-      if (this.x + this.width >= otherobj.x) {
+      if (this.x + this.width >= otherobj.x && (this.x + this.width <= otherobj.x+8)) {
         //If the other object is within the same verticle plane as this object
         //OR if this object is within the same verticle plane as the other object
         if (
@@ -912,7 +912,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
       //Check Top
       //If the top side of this object is inside or touching the bottom side of another object
-      if (this.y <= otherobj.y + otherobj.height) {
+      if ((this.y <= otherobj.y + otherobj.height) && (this.y >= otherobj.y + otherobj.height - 8)) {
         //If the other object is within the same horizontal plane as this object
         //OR if this object is within the same hotizontal plane of the other object
         if (
@@ -925,7 +925,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
       }
 
       //Check Bottom
-      if (this.y + this.height >= otherobj.y) {
+      if ((this.y + this.height >= otherobj.y) && (this.y + this.height <= otherobj.y + 8)) {
         //If the other object is within the same horizontal plane as this object
         //OR if this object is within the same hotizontal plane of the other object
         if (
@@ -1074,6 +1074,12 @@ function updateGameArea() {
           console.log(enemyArr.length);
       }
   }
+
+  //Handle player collision
+  animatedObjects.forEach(function(x){
+    player.checkCollision(x);
+  }
+  )
 
   //Set Values if the player is trying to move the piece
   if (gameArea.keys && gameArea.keys[37]) {
