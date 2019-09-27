@@ -5,6 +5,7 @@ var animatedObjects = []; //Array of animated objects
 var staticObjects = []; //Array of static objects
 var scoreObject; //Object to draw score
 var score = 0; //Tracks the score
+var killValue = 100; // Scoring value of a kill
 var map; //Variable to handle the background image
 var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
@@ -34,7 +35,14 @@ var enemy2 = new object(
 let projectiles = [];
 const projectileSpeed = 25;
 var lastFire = 0;
+let bulletDamage = 20;
 var enemyArr = [];
+
+let enemyDamage = 25;
+let lastHit = 0;
+let hit = false;
+let invincibleLength = 2000;
+let hitBlinkFrequency = 200;
 //enemyArr.push(enemy1);
 //enemyArr.push(enemy2);
 
@@ -641,16 +649,34 @@ function object(width, height, source, x, y, health, frame, type, data) {
     //Grab the current context
     ctx = gameArea.context;
 
+    if(player.health <= 0) {
+      isOver = true;
+    }
+
     //Handle player movement
     if (type == "player") {
       //Stop animating if the player is not moving
       if (this.speedX == 0 && this.speedY == 0 && !(gameArea.keys && gameArea.keys[32])) {
         this.frame = 0;
       }
-      
+    
+      if (! hit || Math.floor(Date.now() / hitBlinkFrequency) % 2) {
+          ctx.drawImage(
+            this.image,
+            this.width * this.frame,
+            0,
+            this.width,
+            this.height,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+          );
+      }
       //Draw the player object using drawImage
       //This allows us to dynamically crop the sprite map
       //image, sx, sy, swidth, sheight, x, y, width, height(64,64)
+      /*
       ctx.drawImage(
         this.image,
         this.width * this.frame,
@@ -662,6 +688,8 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.width,
         this.height
       );
+      */
+      
       //Update the frame if we are at a 10th interation
       if (everyinterval(10)) 
       {
@@ -793,17 +821,17 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
     } else if (type == "enemy") {
       if(enemyArr.includes(this)) {
-      ctx.drawImage(
-        this.image,
-        this.width * this.frame,
-        0,
-        this.width,
-        this.height,
-        this.x,
-        this.y,
-        this.width,
-        this.height
-      );
+        ctx.drawImage(
+          this.image,
+          this.width * this.frame,
+          0,
+          this.width,
+          this.height,
+          this.x,
+          this.y,
+          this.width,
+          this.height
+        );
       }
 
       if (everyinterval(10)) {
@@ -814,9 +842,6 @@ function object(width, height, source, x, y, health, frame, type, data) {
         }
       } 
     } else if(this.type == "score") {
-      if(everyinterval(1)){ //Changed this to make score feel more meaningful
-        score++;
-      }
       this.data = "Score: " + score.toString();
       ctx.font = this.width + " " + this.height;
       ctx.fillStyle = this.source;
@@ -845,6 +870,8 @@ function object(width, height, source, x, y, health, frame, type, data) {
           this.frame = this.frame + 1;
         }
       }
+
+      
     }
   }),
     //Function to handle updating the position of a given object
@@ -1004,9 +1031,10 @@ function updateGameArea() {
           {
               //Remove the bullet and break because this enemy is gone
               projectiles.splice(j, 1);
-              enemyArr[i].health -= 20;
+              enemyArr[i].health -= bulletDamage;
               if(enemyArr[i].health <= 0) {
                 enemyArr.splice(i, 1);
+                score += killValue;
               }
               break;
           }
@@ -1083,7 +1111,6 @@ function updateGameArea() {
 
   if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
     //space
-    console.log("herr");
     switch (direction) {
       case 0:
         projectiles.push(
@@ -1190,6 +1217,19 @@ function updateGameArea() {
      enemyNewPos(i);
      //console.log(enemyArr[i].x);
      enemyUpdate(i);
+
+     if(player.checkBullet(enemyArr[i]) && ((Date.now() - lastHit) > invincibleLength)) {
+       lastHit = Date.now();
+        hit = true;
+
+       player.health -= enemyDamage;
+       console.log("new player health: " + player.health);
+
+       setTimeout(() => {
+        hit = false;
+       }, invincibleLength)
+       
+     }
    }
 
    heartArr.forEach(function(x)
@@ -1198,6 +1238,7 @@ function updateGameArea() {
    });
 
    scoreObject.update();
+   
 }
 
 //Basic collision detection function for 2 boxes
