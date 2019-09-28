@@ -771,6 +771,22 @@ function object(width, height, source, x, y, health, frame, type, data) {
         case 3:
           this.y += projectileSpeed;
           break;
+        case 4:
+          this.y -= projectileSpeed;
+          this.x -= projectileSpeed;
+          break;
+        case 5: 
+          this.y -= projectileSpeed;
+          this.x += projectileSpeed;
+          break;
+        case 6:
+          this.y += projectileSpeed;
+          this.x += projectileSpeed;
+          break;
+        case 7:
+          this.y += projectileSpeed;
+          this.x -= projectileSpeed;
+          break;
       }
 
       for (let i = 0; i < projectiles.length; i++) {
@@ -862,6 +878,8 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.width,
         this.height
       );
+
+      
 
       if (everyinterval(50)) {
         if (this.frame == 4) {
@@ -1109,6 +1127,31 @@ function updateGameArea() {
     else player.speedY = 0;
   }
 
+  // up and left
+  if (gameArea.keys && gameArea.keys[38] && gameArea.keys[37]) {
+    direction = 4;
+    console.log("NW");
+  }
+
+  // up and right
+  if (gameArea.keys && gameArea.keys[38] && gameArea.keys[39]) {
+    direction = 5;
+    console.log("NE")
+  }
+
+  // down and left
+  if (gameArea.keys && gameArea.keys[40] && gameArea.keys[37]) {
+    direction = 7;
+    console.log("SW");
+  }
+
+  // down and right
+  if (gameArea.keys && gameArea.keys[40] && gameArea.keys[39]) {
+    direction = 6;
+    console.log("SE");
+  }
+
+
   if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
     //space
     switch (direction) {
@@ -1188,6 +1231,83 @@ function updateGameArea() {
         lastFire = Date.now();
         player.image.src = "images/sword_down.png";
         break;
+        //diagonal directions
+        case 4:
+          projectiles.push(
+            new object(
+              16,
+              16,
+              "images/beam_up_left.png",
+              player.x,
+              player.y,
+              0,
+              0,
+              "projectile",
+              {
+                direction: 4
+              }
+            )
+          );
+          lastFire = Date.now();
+          player.image.src = "images/sword_up.png";
+          break;
+        case 5:
+          projectiles.push(
+            new object(
+              16,
+              16,
+              "images/beam_up_right.png",
+              player.x + player.width,
+              player.y,
+              0,
+              0,
+              "projectile",
+              {
+                direction: 5
+              }
+            )
+          );
+          lastFire = Date.now();
+          player.image.src = "images/sword_up.png";
+          break;
+        case 6:
+          projectiles.push(
+            new object(
+              16,
+              16,
+              "images/beam_down_right.png",
+              player.x + player.width,
+              player.y + player.height,
+              0,
+              0,
+              "projectile",
+              {
+                direction: 6
+              }
+            )
+          );
+          lastFire = Date.now();
+          player.image.src = "images/sword_down.png";
+          break;
+        case 7:
+          projectiles.push(
+            new object(
+              16,
+              16,
+              "images/beam_down_left.png",
+              player.x,
+              player.y + player.height,
+              0,
+              0,
+              "projectile",
+              {
+                direction: 7
+              }
+            )
+          );
+          lastFire = Date.now();
+          player.image.src = "images/sword_down.png";
+          break;
     }
   }
 
