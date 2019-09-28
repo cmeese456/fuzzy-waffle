@@ -38,7 +38,7 @@ var lastFire = 0;
 let bulletDamage = 20;
 var enemyArr = [];
 
-let enemyDamage = 25;
+let enemyDamage = 10;
 let lastHit = 0;
 let hit = false;
 let invincibleLength = 2000;
@@ -835,28 +835,6 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.height
       );
 
-    } else if (type == "enemy") {
-      if(enemyArr.includes(this)) {
-        ctx.drawImage(
-          this.image,
-          this.width * this.frame,
-          0,
-          this.width,
-          this.height,
-          this.x,
-          this.y,
-          this.width,
-          this.height
-        );
-      }
-
-      if (everyinterval(10)) {
-        if (this.frame == 3) {
-          this.frame = 0;
-        } else {
-          this.frame = this.frame + 1;
-        }
-      } 
     } else if(this.type == "score") {
       this.data = "Score: " + score.toString();
       ctx.font = this.width + " " + this.height;
@@ -878,18 +856,6 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.width,
         this.height
       );
-
-      
-
-      if (everyinterval(50)) {
-        if (this.frame == 4) {
-          this.frame = 0;
-        } else {
-          this.frame = this.frame + 1;
-        }
-      }
-
-      
     }
   }),
     //Function to handle updating the position of a given object
@@ -1356,13 +1322,27 @@ function updateGameArea() {
      }
    }
 
+   //Update heart images accordingly
+   if(player.health == 90) {heart1.frame = 2;}
+   else if(player.health == 80) {heart1.frame = 4;}
+   else if(player.health == 70) {heart2.frame = 2;}
+   else if(player.health == 60) {heart2.frame = 4;}
+   else if(player.health == 50) {heart3.frame = 2;}
+   else if(player.health == 40) {heart3.frame = 4;}
+   else if(player.health == 30) {heart4.frame = 2;}
+   else if(player.health == 20) {heart4.frame = 4;}
+   else if(player.health == 10) {heart5.frame = 2;}
+
+   //Redraw hearts
    heartArr.forEach(function(x)
    {
      x.update();
    });
 
+   //Redraw score
    scoreObject.update();
 
+   //Check if we need to end the game
    if(isOver){
      gameArea.stop();
    }
@@ -1375,25 +1355,13 @@ function collides(x, y, r, b, x2, y2, r2, b2) {
   return !(r <= x2 || x > r2 || b <= y2 || y > b2);
 }
 
-function enemySwitch() {
-  if (enemy1.x == 1208) {
-    enemy1.image.src = 'images/enemy_left.png';
-    enemy1.speedX = -8;
-  } else if (enemy1.x == 48) {
-    enemy1.image.src = 'images/enemy_right.png';
-    enemy1.speedX = 8;
-  }
-
-  if (enemy2.x == 1200) {
-    enemy1.image.src = 'images/enemy_left.png';
-    enemy2.speedX = -8;
-  } else if (enemy2.x == 48) {
-    enemy1.image.src = 'images/enemy_right.png';
-    enemy2.speedX = 8;
-  }
-}
-
-//Handles enemy speed updates
+/**
+ * Takes no values and operates on the global array of enemies enemyArr.
+ * If enemies are within a small bound of either side of the screen,
+ * this function performs the neccessary work of swapping their direction
+ * to the opposite side of the screen. In essence enemies walk back in forth
+ * with static Y directions
+ */
 function enemyAi()
 {
     //Check if we need to swap the direction of any enemies
@@ -1443,34 +1411,20 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-/* Legacy Start Image Code*/
-/*$(function(){
-    //create a canvas and append it to the HTML body
-    startCanvas = document.createElement("canvas");
-    startCanvas.id = "startCanvas";
-    startCanvas.width = canvasWidth;
-    startCanvas.height  = canvasHeight;
-    document.body.appendChild(startCanvas);
-  
-    //logic for switching between background images
-    startImage = new Image();
-    var count = 0;
-    startImage.src = "images/start-screen.png"
-    startImage.addEventListener('load',function(){
-      startCanvas.getContext("2d").drawImage(startImage,0,0,startCanvas.width,startCanvas.height)
-    });
-  
-    //set its event listener to run startGame function when the user clicks
-    $('#startCanvas').on("click", startGame);
-}); */
-
+/**
+ * Function that takes an index of the enemyArr corresponding to an enemy
+ * And updates that enemies positional values based on their speed
+ */
 function enemyNewPos(i)
 {
     enemyArr[i].x += enemyArr[i].speedX;
     enemyArr[i].y += enemyArr[i].speedY;
 }
 
+/**
+ * Function that takes an index of the enemyArr corresponding to an enemy
+ * And draws that enemy to the screen + updates their animation frame if applicable
+ */
 function enemyUpdate(i)
 {
     ctx = gameArea.context;
