@@ -1130,26 +1130,24 @@ function updateGameArea() {
   // up and left
   if (gameArea.keys && gameArea.keys[38] && gameArea.keys[37]) {
     direction = 4;
-    console.log("NW");
   }
 
   // up and right
   if (gameArea.keys && gameArea.keys[38] && gameArea.keys[39]) {
     direction = 5;
-    console.log("NE")
-  }
-
-  // down and left
-  if (gameArea.keys && gameArea.keys[40] && gameArea.keys[37]) {
-    direction = 7;
-    console.log("SW");
   }
 
   // down and right
   if (gameArea.keys && gameArea.keys[40] && gameArea.keys[39]) {
     direction = 6;
-    console.log("SE");
   }
+  
+  // down and left
+  if (gameArea.keys && gameArea.keys[40] && gameArea.keys[37]) {
+    direction = 7;
+  }
+
+  
 
 
   if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
