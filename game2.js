@@ -46,6 +46,7 @@ let hitBlinkFrequency = 200;
 let toughness = 200;
 let enemySpeed = 4;
 let scorePerSecond = 10;
+let difficulty = "Very Easy";
 //Variables for dynamic height and width, commenting to save but
 //Static window size probably best option
 //var wWidth = Math.floor(window.innerWidth/8.0) * 8;
@@ -539,6 +540,9 @@ function startGame() {
   //Create Score Object
   scoreObject = new object("30px", "Consolas", "black", canvasWidth / 2, 60, 0, 0, "score", "Score: 0");
 
+  //Create difficulty Object
+  difficultyObject = new object("30px", "Consolas", "black", 330, 100, 0, 0, "difficulty", "Difficulty: Very Easy");
+
   //Create hearts
   heart1 = new object(46, 32, "images/hearts.png", 320, 32, 0, 0, "heart");
   heart2 = new object(46, 32, "images/hearts.png", 320+60, 32, 0, 0, "heart");
@@ -844,6 +848,22 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
       //Draw the score
       this.data = "Score: " + score.toString();
+      ctx.font = this.width + " " + this.height;
+      ctx.fillStyle = this.source;
+      ctx.fillText(this.data, this.x, this.y);
+    }
+
+    else if(this.type == "difficulty")
+    {
+      //Update the difficulty
+      if(toughness == 160) {difficulty = "Easy";}
+      else if(toughness == 120) {difficulty = "Medium"}
+      else if(toughness == 80) {difficulty = "Hard"}
+      else if(toughness == 60) {difficulty = "Expert"}
+      else if(toughness == 40) {difficulty = "Insanity"}
+
+      //Draw the difficulty
+      this.data = "Difficulty: " + difficulty;
       ctx.font = this.width + " " + this.height;
       ctx.fillStyle = this.source;
       ctx.fillText(this.data, this.x, this.y);
@@ -1365,6 +1385,7 @@ function updateGameArea() {
 
    //Redraw score
    scoreObject.update();
+   difficultyObject.update();
 
    //Check if we need to end the game
    if(isOver){
