@@ -1392,7 +1392,7 @@ function enemyAi()
     for(var i=0; i<enemyArr.length; i++)
     {
         //If we are within 40 pixels of the right border
-        if(enemyArr[i].x >= (canvasWidth - 16))
+        if(enemyArr[i].x >= (canvasWidth - 80))
         {
             //Change image and data value
             enemyArr[i].image.src = 'images/enemy_left.png'
@@ -1416,7 +1416,7 @@ function enemyAi()
 
         else if(enemyArr[i].data == "L")
         {
-            enemyArr[i].speedX = enemySpeed;
+            enemyArr[i].speedX = -enemySpeed;
             enemyArr[i].speedY = 0;
         }
     }
