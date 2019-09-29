@@ -43,9 +43,9 @@ let lastHit = 0;
 let hit = false;
 let invincibleLength = 2000;
 let hitBlinkFrequency = 200;
-//enemyArr.push(enemy1);
-//enemyArr.push(enemy2);
-
+let toughness = 200;
+let enemySpeed = 4;
+let scorePerSecond = 10;
 //Variables for dynamic height and width, commenting to save but
 //Static window size probably best option
 //var wWidth = Math.floor(window.innerWidth/8.0) * 8;
@@ -836,6 +836,13 @@ function object(width, height, source, x, y, health, frame, type, data) {
       );
 
     } else if(this.type == "score") {
+      //Update the score every second
+      if(everyinterval(50))
+      {
+        score = score + scorePerSecond;
+      }
+
+      //Draw the score
       this.data = "Score: " + score.toString();
       ctx.font = this.width + " " + this.height;
       ctx.fillStyle = this.source;
@@ -1025,8 +1032,25 @@ function updateGameArea() {
       }
   }
 
+  //Update difficulty every 20 seconds
+  if(everyinterval(1000))
+  {
+    if(toughness > 50)
+    {
+      toughness = toughness - 20;
+      console.log("Toughness is: " + toughness);
+    }
+
+    if(enemySpeed < 8)
+    {
+      enemySpeed = enemySpeed + 1;
+    }
+
+    scorePerSecond += 10;
+  }
+
   //Randomly spawn enemies if applicable
-  if(gameArea.frameNo == 1 || everyinterval(200))
+  if(gameArea.frameNo == 1 || everyinterval(toughness))
   {
       //Generate a random number to determine if we spawn from the left or right side
       var rand1 = getRandomInt(1, 10);
@@ -1386,13 +1410,13 @@ function enemyAi()
         //Update the speed values accordingly
         if(enemyArr[i].data == "R")
         {
-            enemyArr[i].speedX = 8;
+            enemyArr[i].speedX = enemySpeed;
             enemyArr[i].speedY = 0;
         }
 
         else if(enemyArr[i].data == "L")
         {
-            enemyArr[i].speedX = -8;
+            enemyArr[i].speedX = enemySpeed;
             enemyArr[i].speedY = 0;
         }
     }
