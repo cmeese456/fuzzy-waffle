@@ -12,6 +12,7 @@ var pattern; //Pattern for background
 var startCanvas; //Canvas used for the startgame functionality
 var startImage; //Image used in the starting screen canvas above
 var heartArr = [];
+var fireArr = [];
 /*var enemy1 = new object(
   64,
   88,
@@ -555,6 +556,9 @@ function startGame() {
   heartArr.push(heart4);
   heartArr.push(heart5);
 
+  //fire1 = new object(64, 80, "images/fire_extended.png", 320+240, 200, 0, 0, "fire", 0);
+  //fireArr.push(fire1);
+
   //Load background image
   //May want to load all images here but for now the player image is having no issues with loads
   backgroundImage = new Image();
@@ -884,6 +888,34 @@ function object(width, height, source, x, y, health, frame, type, data) {
         this.height
       );
     }
+
+    else if(this.type == "fire")
+    {
+      ctx.drawImage(
+        this.image,
+        this.width * this.frame,
+        0,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+
+      if(everyinterval(4))
+      {
+        if(this.frame <= 6)
+        {
+          this.frame = this.frame + 1;
+        }
+      }
+
+      if(this.frame == 7)
+      {
+        fireArr.splice(this.data, 1);
+      }
+    }
   }),
     //Function to handle updating the position of a given object
     (this.newPos = function() {
@@ -1044,6 +1076,8 @@ function updateGameArea() {
               projectiles.splice(j, 1);
               enemyArr[i].health -= bulletDamage;
               if(enemyArr[i].health <= 0) {
+                //Spawn a fire on the enemies location
+                fireArr.push(new object(64, 80, "images/fire_extended.png", enemyArr[i].x, enemyArr[i].y, 0, 0, "fire", fireArr.length));
                 enemyArr.splice(i, 1);
                 score += killValue;
               }
@@ -1365,6 +1399,12 @@ function updateGameArea() {
        
      }
    }
+
+   //Update fire/enemy death animations
+   fireArr.forEach(function(x)
+   {
+     x.update();
+   });
 
    //Update heart images accordingly
    if(player.health == 90) {heart1.frame = 2;}
