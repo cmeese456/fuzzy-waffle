@@ -9,6 +9,22 @@ var backgroundImage; //Image used to tile the background
 var pattern; //Pattern for background
 var startCanvas; //Canvas used for the startgame functionality
 var startImage; //Image used in the starting screen canvas above
+var music = document.createElement("audio");  // music
+var isPlaying = 0;
+var soundEffect = document.createElement("audio");
+var isPlayingFX = 0;
+
+$( document ).ready(function() {
+  console.log( "ready!" );
+  music.src = "music/8-bit-menu-David_Renda-FesliyanStudios.com.mp3"
+  music.controls = true;
+  music.autoplay = true;
+  music.loop = true;
+  document.body.prepend(music);
+});
+
+
+
 /*var enemy1 = new object(
   64,
   88,
@@ -49,13 +65,18 @@ const canvasWidth = 1280;
 var isOver = false;
 
 /* Start Screen Code*/
-$(function displayStart() {
+function displayStart() {
   //create a canvas and append it to the HTML body
   startCanvas = document.createElement("canvas");
   startCanvas.id = "startCanvas";
   startCanvas.width = canvasWidth;
   startCanvas.height = canvasHeight;
   document.body.appendChild(startCanvas);
+
+
+  
+  //document.getElementById("music").onload(play());
+
 
   //logic for switching between background images
   startImage = new Image();
@@ -66,7 +87,25 @@ $(function displayStart() {
 
   //set its event listener to run startGame function when the user clicks
   $("#startCanvas").on("click", startGame);
-});
+  
+  // play music when starting the game
+  $("#startCanvas").on("click", function() {
+    if (isPlaying == 0){
+    console.log("music");
+    
+    var playPromise = music.play();
+    if (playPromise !== undefined) {
+    playPromise.then(function() {
+      // Automatic playback started!
+    }).catch(function(error) {
+      // Automatic playback failed.
+      // Show a UI element to let the user manually start playback.
+    });
+    }
+  isPlaying = 1;
+    }
+  });
+}
 
 /* End Screen Code*/
 function displayEnd() {
@@ -86,6 +125,8 @@ function displayEnd() {
       endCanvas.getContext("2d").drawImage(endImage, 0, 0, endCanvas.width, endCanvas.height)
   });
 
+
+
   //set its event listener to run startGame function when the user clicks
   $("#endCanvas").on("click", function () {
       window.location.reload();
@@ -104,6 +145,7 @@ enemy_left.source = "images/enemy_left.png";
 /* This function handles starting the game by initializing players, objects and enemies
     As well as setting up the map */
 function startGame() {
+
   $("#startCanvas").remove();
   //Create the player here
   player = new object(
@@ -594,6 +636,28 @@ var gameArea = {
   //Function to stop the game when a player dies
   //Needs modification
   stop: function() {
+    // play death sound
+    soundEffect.src = "sound-effects/char-death-end-sound.wav";
+    soundEffect.autoplay = true;
+    soundEffect.play();
+
+    if (isPlayingFX == 0){
+      console.log("death sound effect");
+      
+      var playPromise = soundEffect.play();
+      if (playPromise !== undefined) {
+      playPromise.then(function() {
+        // Automatic playback started!
+      }).catch(function(error) {
+        // Automatic playback failed.
+        // Show a UI element to let the user manually start playback.
+      });
+      }
+      isPlaying = 1;
+    }
+    
+    
+    
     //map.image.src = "lose.png";
     //map.newPos();
     //map.update();

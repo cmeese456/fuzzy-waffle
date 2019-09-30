@@ -45,6 +45,9 @@ $(function(){
 
 //startGame function simply calls the method start on the object gameAre
 function startGame() {
+  // Play game music
+  
+
   //Initializes the Game Piece
   //width,height,color,x,y,health
   player = new character(
@@ -558,4 +561,14 @@ function updateGameArea() {
   //Update the positions
   player.newPos();
   player.update();
+}
+
+
+// Handles Game Music
+function updateGameMusic(){
+  var musicFile;
+
+
+  
+
 }
