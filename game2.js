@@ -918,7 +918,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
       if(this.frame == 7)
       {
-        fireArr.splice(this.data, 1);
+        fireArr.splice(this, 1);
       }
     }
     else if(this.type == "healthbar") {
@@ -1379,6 +1379,31 @@ function updateGameArea() {
           break;
     }
   }
+
+  //Check if a bullet hit a bush
+  animatedObjects.forEach(function(x) {
+    if(x.type == "tree")
+    {
+      for(var i = 0; i < projectiles.length; i++)
+      {
+        //Grab the values neccessary to determine collision
+        var currentP = projectiles[i];
+        var result = currentP.checkBullet(x);
+
+        //If we collided do the following
+        if(result && x.frame >= 5)
+        {
+          //Draw a fire ontop of the tree
+          if(x.frame == 15) {fireArr.push(new object(64, 80, "images/fire_extended.png", x.x, x.y, 0, 0, "fire", fireArr.length));}
+
+          //Handle updating the bullet array and tree
+          projectiles.splice(i, 1);
+          x.frame = 0;
+          break;
+        }
+      }
+    }
+  })
 
   //Redraw animated objects
   animatedObjects.forEach(function(x) {
