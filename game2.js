@@ -933,6 +933,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
       }
       ctx.fillRect(this.x, this.y, this.width * (this.health / 100), this.height);
       
+      console.log(healthBars);
     }
   }),
     //Function to handle updating the position of a given object
