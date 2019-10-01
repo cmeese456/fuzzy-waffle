@@ -36,8 +36,13 @@ var enemy2 = new object(
 let projectiles = [];
 const projectileSpeed = 25;
 var lastFire = 0;
-let bulletDamage = 20;
+let bulletDamage = 15;
 var enemyArr = [];
+
+let healthBars = [];
+const healthBarHeight = 6;
+const healthBarWidth = 64;
+const healthBarMargin = 9;
 
 let enemyDamage = 10;
 let lastHit = 0;
@@ -916,6 +921,20 @@ function object(width, height, source, x, y, health, frame, type, data) {
         fireArr.splice(this.data, 1);
       }
     }
+    else if(this.type == "healthbar") {
+  
+      ctx.clearRect(this.x, this.y, this.width, this.height);
+      if(this.health > 65) {
+        ctx.fillStyle = "#39ff14";
+      } else if (this.health > 30) {
+        ctx.fillStyle = "yellow";
+      } else {
+        ctx.fillStyle = "red";
+      }
+      ctx.fillRect(this.x, this.y, this.width * (this.health / 100), this.height);
+      
+      console.log(healthBars);
+    }
   }),
     //Function to handle updating the position of a given object
     (this.newPos = function() {
@@ -1070,16 +1089,18 @@ function updateGameArea() {
           var currentP = projectiles[j];
           var result = currentP.checkBullet(enemyArr[i]);
 
-          if(result == true)
+          if(result)
           {
               //Remove the bullet and break because this enemy is gone
               projectiles.splice(j, 1);
               enemyArr[i].health -= bulletDamage;
+              healthBars[i].health -= bulletDamage;
               if(enemyArr[i].health <= 0) {
                 //Spawn a fire on the enemies location
                 fireArr.push(new object(64, 80, "images/fire_extended.png", enemyArr[i].x, enemyArr[i].y, 0, 0, "fire", fireArr.length));
                 enemyArr.splice(i, 1);
                 score += killValue;
+                healthBars.splice(i, 1);
               }
               break;
           }
@@ -1118,6 +1139,7 @@ function updateGameArea() {
           //Create the enemy
           var newEnemy = new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R");
           enemyArr.push(newEnemy);
+          healthBars.push(new object(healthBarWidth, healthBarHeight, "", 48, rand2 - healthBarMargin, 100, 0, "healthbar", ""));
 
           console.log("Successfully pushed one left side enemy and size of enemyArr is");
           console.log(enemyArr.length);
@@ -1131,6 +1153,7 @@ function updateGameArea() {
           //Create the enemy
           var newEnemy2 = new object(64, 88, "images/enemy_left.png", 1200, rand3, 100, 0, "enemy", "L");
           enemyArr.push(newEnemy2);
+          healthBars.push(new object(healthBarWidth, healthBarHeight, "", 1200, rand3 - healthBarMargin, 100, 0, "healthbar", ""));
 
           console.log("Successfully pushed one right side enemy");
           console.log(enemyArr.length);
@@ -1197,9 +1220,7 @@ function updateGameArea() {
     direction = 7;
   }
 
-  
-
-
+  // depending on direction of player and if they press the space bar, the correct projectile is added
   if (gameArea.keys && gameArea.keys[32] && ((Date.now() - lastFire) > 100)) {
     //space
     switch (direction) {
@@ -1385,13 +1406,14 @@ function updateGameArea() {
      enemyNewPos(i);
      //console.log(enemyArr[i].x);
      enemyUpdate(i);
+     healthBars[i].x += enemyArr[i].speedX;
 
+     // if player is hit, they are immune for certain amount of time
      if(player.checkBullet(enemyArr[i]) && ((Date.now() - lastHit) > invincibleLength)) {
        lastHit = Date.now();
         hit = true;
 
        player.health -= enemyDamage;
-       console.log("new player health: " + player.health);
 
        setTimeout(() => {
         hit = false;
@@ -1399,6 +1421,11 @@ function updateGameArea() {
        
      }
    }
+
+   //update the healthbar locations and size 
+   healthBars.forEach( bar => {
+     bar.update();
+   });
 
    //Update fire/enemy death animations
    fireArr.forEach(function(x)
@@ -1480,6 +1507,7 @@ function enemyAi()
             enemyArr[i].speedX = -enemySpeed;
             enemyArr[i].speedY = 0;
         }
+
     }
 }
 
@@ -1504,7 +1532,7 @@ function enemyNewPos(i)
 {
     enemyArr[i].x += enemyArr[i].speedX;
     enemyArr[i].y += enemyArr[i].speedY;
-}
+  }
 
 /**
  * Function that takes an index of the enemyArr corresponding to an enemy
@@ -1524,6 +1552,7 @@ function enemyUpdate(i)
         enemyArr[i].width,
         enemyArr[i].height
       );
+
         
       //Update the frame if we are at a 10th interation
       if (everyinterval(10)) 
