@@ -1167,7 +1167,7 @@ function updateGameArea() {
   )
 
   //Set Values if the player is trying to move the piece
-  if (gameArea.keys && gameArea.keys[37]) {
+  if (gameArea.keys && (gameArea.keys[37] || gameArea.keys[65])) {
     //Left
     direction = 0;
     if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_left_large.png";}
@@ -1175,7 +1175,7 @@ function updateGameArea() {
     else player.speedX = 0;
   }
 
-  if (gameArea.keys && gameArea.keys[39]) {
+  if (gameArea.keys && (gameArea.keys[39] || gameArea.keys[68])) {
     //Right
     direction = 1;
     if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_right_large.png";}
@@ -1183,7 +1183,7 @@ function updateGameArea() {
     else player.speedX = 0;
   }
 
-  if (gameArea.keys && gameArea.keys[38]) {
+  if (gameArea.keys && (gameArea.keys[38] || gameArea.keys[87])) {
     //Up
     direction = 2;
     if(!(gameArea.keys && gameArea.keys[32])) {player.image.src = "images/character_up_large.png";}
@@ -1191,7 +1191,7 @@ function updateGameArea() {
     else player.speedY = 0;
   }
 
-  if (gameArea.keys && gameArea.keys[40]) {
+  if (gameArea.keys && (gameArea.keys[40] || gameArea.keys[83])) {
     //Down
     direction = 3;
     //Don't change the image if the character is firing
