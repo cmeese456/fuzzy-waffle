@@ -77,6 +77,9 @@ function displayEnd() {
     endImage.src = "images/lose-screen.png"
     endImage.addEventListener("load", function () {
         endCanvas.getContext("2d").drawImage(endImage, 0, 0, endCanvas.width, endCanvas.height)
+        endCanvas.getContext("2d").font = "30px Trebuchet MS";
+        endCanvas.getContext("2d").fillStyle = "white";
+        endCanvas.getContext("2d").fillText("Your Final Score: " + score.toString(), (canvasWidth / 3) + 50, 7 * canvasHeight / 8);
     });
 
     //set its event listener to run startGame function when the user clicks
