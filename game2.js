@@ -77,6 +77,9 @@ function displayEnd() {
     endImage.src = "images/lose-screen.png"
     endImage.addEventListener("load", function () {
         endCanvas.getContext("2d").drawImage(endImage, 0, 0, endCanvas.width, endCanvas.height)
+        endCanvas.getContext("2d").font = "30px Trebuchet MS";
+        endCanvas.getContext("2d").fillStyle = "white";
+        endCanvas.getContext("2d").fillText("Your Final Score: " + score.toString(), (canvasWidth / 3) + 50, 7 * canvasHeight / 8);
     });
 
     //set its event listener to run startGame function when the user clicks
@@ -134,24 +137,186 @@ function startGame() {
     animatedObjects.push(tree7);
     animatedObjects.push(tree8);
 
-    //Create static bush objects var lrBush1 = new object( 64, 32, "images/bush_left_right.png", 0, 96, 0, 0, "static" ); //Start top left var lrBush2 = new object( 64, 32, "images/bush_left_right.png", 48, 96, 0, 0, "static" ); var udBush1 = new object( 32, 64, "images/bush_up_down.png", 104, 0, 0, 0, "static" ); var udBush2 = new object( 32, 64, "images/bush_up_down.png", 104, 64, 0, 0, "static" ); var lrBush3 = new object( 64, 32, "images/bush_left_right.png", 0, 600, 0, 0, "static" ); //Start bottom left var lrBush4 = new object( 64, 32, "images/bush_left_right.png", 48, 600, 0, 0, "static" ); var udBush3 = new object( 32, 64, "images/bush_up_down.png", 104, 600, 0, 0, "static" ); var udBush4 = new object( 32, 64, "images/bush_up_down.png", 104, 664, 0, 0, "static" ); var lrBush5 = new object( 64, 32, "images/bush_left_right.png", 1216, 96, 0, 0, "static" ); //Start top right var lrBush6 = new object( 64, 32, "images/bush_left_right.png", 1168, 96, 0, 0, "static" ); var udBush5 = new object( 32, 64, "images/bush_up_down.png", 1144, 0, 0, 0, "static" ); var udBush6 = new object( 32, 64, "images/bush_up_down.png", 1144, 64, 0, 0, "static" ); var lrBush7 = new object( 64, 32, "images/bush_left_right.png", 1216, 600, 0, 0, "static" ); //Start bottom right var lrBush8 = new object( 64, 32, "images/bush_left_right.png", 1168, 600, 0, 0, "static" ); var udBush7 = new object( 32, 64, "images/bush_up_down.png", 1144, 600, 0, 0, "static" ); var udBush8 = new object( 32, 64, "images/bush_up_down.png", 1144, 664, 0, 0, "static" );
-    staticObjects.push(lrBush2);
-    staticObjects.push(lrBush1);
-    staticObjects.push(udBush1);
-    staticObjects.push(udBush2);
-    staticObjects.push(lrBush4);
-    staticObjects.push(lrBush3);
-    staticObjects.push(udBush3);
-    staticObjects.push(udBush4);
-    staticObjects.push(lrBush5);
-    staticObjects.push(lrBush6);
-    staticObjects.push(udBush5);
-    staticObjects.push(udBush6);
-    staticObjects.push(lrBush7);
-    staticObjects.push(lrBush8);
-    staticObjects.push(udBush7);
-    staticObjects.push(udBush8);
+    
+//Create static bush objects
+var lrBush1 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    0,
+    96,
+    0,
+    0,
+    "static"
+  ); //Start top left
+  var lrBush2 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    48,
+    96,
+    0,
+    0,
+    "static"
+  );
+  var udBush1 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    104,
+    0,
+    0,
+    0,
+    "static"
+  );
+  var udBush2 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    104,
+    64,
+    0,
+    0,
+    "static"
+  );
+  var lrBush3 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    0,
+    600,
+    0,
+    0,
+    "static"
+  ); //Start bottom left
+  var lrBush4 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    48,
+    600,
+    0,
+    0,
+    "static"
+  );
+  var udBush3 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    104,
+    600,
+    0,
+    0,
+    "static"
+  );
+  var udBush4 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    104,
+    664,
+    0,
+    0,
+    "static"
+  );
+  var lrBush5 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    1216,
+    96,
+    0,
+    0,
+    "static"
+  ); //Start top right
+  var lrBush6 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    1168,
+    96,
+    0,
+    0,
+    "static"
+  );
+  var udBush5 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    1144,
+    0,
+    0,
+    0,
+    "static"
+  );
+  var udBush6 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    1144,
+    64,
+    0,
+    0,
+    "static"
+  );
+  var lrBush7 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    1216,
+    600,
+    0,
+    0,
+    "static"
+  ); //Start bottom right
+  var lrBush8 = new object(
+    64,
+    32,
+    "images/bush_left_right.png",
+    1168,
+    600,
+    0,
+    0,
+    "static"
+  );
+  var udBush7 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    1144,
+    600,
+    0,
+    0,
+    "static"
+  );
+  var udBush8 = new object(
+    32,
+    64,
+    "images/bush_up_down.png",
+    1144,
+    664,
+    0,
+    0,
+    "static"
+  );
+  staticObjects.push(lrBush2);
+  staticObjects.push(lrBush1);
+  staticObjects.push(udBush1);
+  staticObjects.push(udBush2);
+  staticObjects.push(lrBush4);
+  staticObjects.push(lrBush3);
+  staticObjects.push(udBush3);
+  staticObjects.push(udBush4);
+  staticObjects.push(lrBush5);
+  staticObjects.push(lrBush6);
+  staticObjects.push(udBush5);
+  staticObjects.push(udBush6);
+  staticObjects.push(lrBush7);
+  staticObjects.push(lrBush8);
+  staticObjects.push(udBush7);
+  staticObjects.push(udBush8);
 
+  
     //Create static background objects
     var walkway1 = new object(160, 192, "images/walkway.png", 560, 600, 0, 0, "static");
     var hole = new object(64, 72, "images/hole.png", 960, 600, 0, 0, "static");
