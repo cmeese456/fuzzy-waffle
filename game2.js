@@ -301,17 +301,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
             }
 
             if (!hit || Math.floor(Date.now() / hitBlinkFrequency) % 2) {
-                ctx.drawImage(
-                    this.image,
-                    this.width * this.frame,
-                    0,
-                    this.width,
-                    this.height,
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height
-                );
+                ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
             }
 
             //Update the frame if we are at a 10th interation
@@ -331,17 +321,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
             ctx.fillRect(this.x, this.y, this.width, this.height);
         } else if (type == "fountain") {
             //Draw the image
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
             //Update the frame if we are at a 10th interation
             if (everyinterval(4)) {
                 if (this.frame == 2) {
@@ -352,17 +332,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
             }
         } else if (type == "staticAnimated") {
             //Draw the image
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
         } else if (type == "projectile") {
             // put projectile image here
             let c = gameArea.canvas;
@@ -370,17 +340,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
             ctx.beginPath();
             //ctx.rect(this.x, this.y, 5, 5);
             //ctx.stroke();
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
             switch (this.data["direction"]) {
                 case 0:
                     this.x -= projectileSpeed;
@@ -425,17 +385,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
             }
         } else if (type == "tree") {
             //Draw the tree
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             //Update the animation if needed
             if (everyinterval(50)) {
@@ -446,17 +396,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
                 }
             };
         } else if (type == "static") {
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
         } else if (this.type == "score") {
             //Update the score every second
@@ -488,31 +428,11 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
         else if (this.type == "heart") {
             //Draw the heart
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
         }
 
         else if (this.type == "fire") {
-            ctx.drawImage(
-                this.image,
-                this.width * this.frame,
-                0,
-                this.width,
-                this.height,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+            ctx.drawImage(this.image, this.width * this.frame, 0, this.width, this.height, this.x, this.y, this.width, this.height);
 
             if (everyinterval(4)) {
                 if (this.frame <= 6) {
@@ -535,8 +455,6 @@ function object(width, height, source, x, y, health, frame, type, data) {
                 ctx.fillStyle = "red";
             }
             ctx.fillRect(this.x, this.y, this.width * (this.health / 100), this.height);
-
-            console.log(healthBars);
         }
     }),
         //Function to handle updating the position of a given object
@@ -710,7 +628,6 @@ function updateGameArea() {
     if (everyinterval(1000)) {
         if (toughness > 50) {
             toughness = toughness - 20;
-            console.log("Toughness is: " + toughness);
         }
 
         if (enemySpeed < 8) {
@@ -734,9 +651,6 @@ function updateGameArea() {
             var newEnemy = new object(64, 88, "images/enemy_right.png", 48, rand2, 100, 0, "enemy", "R");
             enemyArr.push(newEnemy);
             healthBars.push(new object(healthBarWidth, healthBarHeight, "", 48, rand2 - healthBarMargin, 100, 0, "healthbar", ""));
-
-            console.log("Successfully pushed one left side enemy and size of enemyArr is");
-            console.log(enemyArr.length);
         }
 
         else if (rand1 > 5) {
@@ -747,9 +661,6 @@ function updateGameArea() {
             var newEnemy2 = new object(64, 88, "images/enemy_left.png", 1200, rand3, 100, 0, "enemy", "L");
             enemyArr.push(newEnemy2);
             healthBars.push(new object(healthBarWidth, healthBarHeight, "", 1200, rand3 - healthBarMargin, 100, 0, "healthbar", ""));
-
-            console.log("Successfully pushed one right side enemy");
-            console.log(enemyArr.length);
         }
     }
 
@@ -906,7 +817,6 @@ function updateGameArea() {
     enemyAi();
     for (var i = 0; i < enemyArr.length; i++) {
         enemyNewPos(i);
-        //console.log(enemyArr[i].x);
         enemyUpdate(i);
         healthBars[i].x += enemyArr[i].speedX;
 
@@ -1033,17 +943,7 @@ function enemyNewPos(i) {
  */
 function enemyUpdate(i) {
     ctx = gameArea.context;
-    ctx.drawImage(
-        enemyArr[i].image,
-        enemyArr[i].width * enemyArr[i].frame,
-        0,
-        enemyArr[i].width,
-        enemyArr[i].height,
-        enemyArr[i].x,
-        enemyArr[i].y,
-        enemyArr[i].width,
-        enemyArr[i].height
-    );
+    ctx.drawImage(enemyArr[i].image, enemyArr[i].width * enemyArr[i].frame, 0, enemyArr[i].width, enemyArr[i].height, enemyArr[i].x, enemyArr[i].y, enemyArr[i].width, enemyArr[i].height);
 
 
     //Update the frame if we are at a 10th interation
