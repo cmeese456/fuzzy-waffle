@@ -571,7 +571,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
             //Draw the score
             this.data = "Score: " + score.toString();
-            ctx.font = this.width + " " + this.height;
+            ctx.font = "900 " + this.width + " " + this.height;
             ctx.fillStyle = this.source;
             ctx.fillText(this.data, this.x, this.y);
         }
@@ -586,7 +586,7 @@ function object(width, height, source, x, y, health, frame, type, data) {
 
             //Draw the difficulty
             this.data = "Difficulty: " + difficulty;
-            ctx.font = this.width + " " + this.height;
+            ctx.font = "900 " + this.width + " " + this.height;
             ctx.fillStyle = this.source;
             ctx.fillText(this.data, this.x, this.y);
         }
