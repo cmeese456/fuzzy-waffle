@@ -639,8 +639,8 @@ var gameArea = {
     // play death sound
     soundEffect.src = "sound-effects/char-death-end-sound.wav";
     soundEffect.autoplay = true;
-    soundEffect.play();
-
+    document.body.append(soundEffect);
+    
     if (isPlayingFX == 0){
       console.log("death sound effect");
       
@@ -653,7 +653,7 @@ var gameArea = {
         // Show a UI element to let the user manually start playback.
       });
       }
-      isPlaying = 1;
+      isPlayingFX = 1;
     }
     
     
