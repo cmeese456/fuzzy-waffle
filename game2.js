@@ -1,5 +1,5 @@
 /* Declare Game Variables Gere */
-//lol
+
 var player; //Player Variable
 var animatedObjects = []; //Array of animated objects
 var staticObjects = []; //Array of static objects
@@ -13,26 +13,6 @@ var startCanvas; //Canvas used for the startgame functionality
 var startImage; //Image used in the starting screen canvas above
 var heartArr = [];
 var fireArr = [];
-/*var enemy1 = new object(
-  64,
-  88,
-  "images/enemy_left.png",
-  48,
-  144,
-  100,
-  0,
-  "enemy"
-);
-var enemy2 = new object(
-  64,
-  88,
-  "images/enemy_left.png",
-  1200,
-  400,
-  100,
-  0,
-  "enemy"
-);*/
 let projectiles = [];
 const projectileSpeed = 25;
 var lastFire = 0;
@@ -53,10 +33,6 @@ let toughness = 200;
 let enemySpeed = 4;
 let scorePerSecond = 10;
 let difficulty = "Very Easy";
-//Variables for dynamic height and width, commenting to save but
-//Static window size probably best option
-//var wWidth = Math.floor(window.innerWidth/8.0) * 8;
-//var wHeight = Math.floor(window.innerHeight/8.0) * 8;
 
 //Game Window Dimensions
 const canvasHeight = 720;
